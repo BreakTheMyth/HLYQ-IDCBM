@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of webman.
  *
@@ -21,8 +23,8 @@ global $argv;
 return [
     'webman' => [
         'handler' => Http::class,
-        'listen' => 'http://0.0.0.0:8787',
-        'count' => cpu_count() * 4,
+        'listen' => getenv('WEBMAN_LISTEN') ?: 'http://0.0.0.0:8787',
+        'count' => max(1, (int) (getenv('WEBMAN_COUNT') ?: cpu_count() * 4)),
         'user' => '',
         'group' => '',
         'reusePort' => false,

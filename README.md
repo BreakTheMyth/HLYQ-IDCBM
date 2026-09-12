@@ -17,6 +17,7 @@ backend/plugin/      Webman 应用插件
 backend/themes/      官网主题
 frontend/admin/      运营后台
 frontend/console/    会员控制台
+frontend/install/    在线安装器
 frontend/packages/   前端共享包
 contracts/           API、产品和插件契约
 docs/                架构及开发文档
@@ -49,6 +50,12 @@ cd frontend/console
 pnpm install
 pnpm dev
 ```
+
+### 在线安装
+
+三个前端应用的生产构建产物会写入 `backend/public/`。制作发行包时只需交付包含 Composer 生产依赖和前端构建产物的 `backend/`；站点根目录必须指向 `backend/public/`。首次访问域名时，系统会自动跳转到 `/install` 完成环境检测、数据库和系统配置。
+
+详细的构建、安装状态、安全与失败恢复说明见 [在线安装器开发与发布说明](docs/development/online-installation.md)。
 
 ## 分支约定
 

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of webman.
  *
@@ -13,8 +15,6 @@
  */
 
 use Webman\Session\FileSessionHandler;
-use Webman\Session\RedisSessionHandler;
-use Webman\Session\RedisClusterSessionHandler;
 
 return [
 
@@ -42,13 +42,13 @@ return [
         ]
     ],
 
-    'session_name' => 'PHPSID',
+    'session_name' => 'HLYQSID',
     
     'auto_update_timestamp' => false,
 
-    'lifetime' => 7*24*60*60,
+    'lifetime' => 2 * 60 * 60,
 
-    'cookie_lifetime' => 365*24*60*60,
+    'cookie_lifetime' => 0,
 
     'cookie_path' => '/',
 
@@ -56,9 +56,9 @@ return [
     
     'http_only' => true,
 
-    'secure' => false,
+    'secure' => filter_var(getenv('SESSION_SECURE') ?: false, FILTER_VALIDATE_BOOL),
     
-    'same_site' => '',
+    'same_site' => 'lax',
 
     'gc_probability' => [1, 1000],
 

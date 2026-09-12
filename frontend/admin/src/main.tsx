@@ -4,10 +4,10 @@ import zhCN from 'antd/locale/zh_CN'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
+import AppBootstrap from './AppBootstrap.tsx'
+import { applyThemeMode, createAppTheme, getInitialThemeMode } from './theme.ts'
 import './styles/global-style.css'
 import './index.css'
-import { appTheme } from './theme.ts'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,12 +19,33 @@ const queryClient = new QueryClient({
   },
 })
 
+/**
+ * 获取当前后台运行路径，兼容 Vite 开发地址和线上自定义后台路径。
+ * @returns BrowserRouter 使用的基础路径
+ */
+function getAdminBasePath(): string {
+  const assetBasePath = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/'
+
+  if (currentPath === assetBasePath || currentPath.startsWith(`${assetBasePath}/`)) {
+    return assetBasePath
+  }
+
+  const firstPathSegment = currentPath.split('/').filter(Boolean)[0]
+  return firstPathSegment ? `/${firstPathSegment}` : '/'
+}
+
+const adminBasePath = getAdminBasePath()
+const initialThemeMode = getInitialThemeMode()
+
+applyThemeMode(initialThemeMode)
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConfigProvider locale={zhCN} theme={appTheme}>
+    <ConfigProvider locale={zhCN} theme={createAppTheme(initialThemeMode)}>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <App />
+        <BrowserRouter basename={adminBasePath}>
+          <AppBootstrap />
         </BrowserRouter>
       </QueryClientProvider>
     </ConfigProvider>

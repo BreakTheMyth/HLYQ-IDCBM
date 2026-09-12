@@ -24,6 +24,7 @@
 - `backend/`：Webman 后端、官网渲染、插件和主题运行环境。
 - `frontend/admin/`：运营后台独立 Vite 应用。
 - `frontend/console/`：会员控制台独立 Vite 应用。
+- `frontend/install/`：在线安装器独立 Vite 应用，构建产物随后端发行包交付。
 - `frontend/packages/`：两个前端共享的 API、类型、Schema 渲染器和通用组件。
 - `contracts/`：OpenAPI、JSON Schema、插件清单、产品配置和跨端公共契约。
 - `docs/`：架构、开发、插件、主题和部署文档。

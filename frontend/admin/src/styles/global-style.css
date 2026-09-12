@@ -35,27 +35,27 @@ body,
      * ============================================================ */
 
     /* Seed Token（种子变量） */
-    --color-primary: #1677ff;      /* 品牌色：主按钮、选中态、列表的操作列文本、表格的操作列文本 */
+    --color-primary: #165dff;      /* 品牌色：主按钮、选中态、列表的操作列文本、表格的操作列文本 */
     --color-success: #52c41a;     /* 成功色：成功提示 */
     --color-warning: #faad14;     /* 警告色：警告提示 */
     --color-error: #ff4d4f;       /* 错误色：错误提示 */
-    --color-link: #1677ff;        /* 链接色：链接文本、列表的操作列文本 */
+    --color-link: #165dff;        /* 链接色：链接文本、列表的操作列文本 */
 
     /* Link 色系 */
-    --color-link-hover: #69b1ff;  /* 链接色：悬浮态 */
-    --color-link-active: #0958d9;  /* 链接色：激活态 */
+    --color-link-hover: #69a0ff;  /* 链接色：悬浮态 */
+    --color-link-active: #0940d9;  /* 链接色：激活态 */
 
     /* Primary 色彩体系（浅→深渐变） */
-    --color-primary-bg: #e6f4ff;           /* Primary 浅色背景色 */
-    --color-primary-bg-hover: #bae0ff;     /* Primary 浅色背景悬浮态 */
-    --color-primary-border: #91caff;    /* Primary 描边色 */
-    --color-primary-border-hover: #69b1ff;       /* Primary 描边色悬浮态 */
-    --color-primary-hover: #4096ff;        /* Primary 悬浮态 */
-    --color-primary-active: #0958d9;       /* Primary 激活态 */
-    --color-primary-text: #1677ff;         /* Primary 文本默认态 */
-    --color-primary-text-hover: #4096ff;   /* Primary 文本悬浮态 */
-    --color-primary-text-active: #0958d9;  /* Primary 文本激活态 */
-    --color-info: #1677ff;               /* 信息色：进行中/处理中状态，与 Primary 一致 */
+    --color-primary-bg: #e6f1ff;           /* Primary 浅色背景色 */
+    --color-primary-bg-hover: #bad8ff;     /* Primary 浅色背景悬浮态 */
+    --color-primary-border: #91bdff;    /* Primary 描边色 */
+    --color-primary-border-hover: #69a0ff;       /* Primary 描边色悬浮态 */
+    --color-primary-hover: #4080ff;        /* Primary 悬浮态 */
+    --color-primary-active: #0940d9;       /* Primary 激活态 */
+    --color-primary-text: #165dff;         /* Primary 文本默认态 */
+    --color-primary-text-hover: #4080ff;   /* Primary 文本悬浮态 */
+    --color-primary-text-active: #0940d9;  /* Primary 文本激活态 */
+    --color-info: #165dff;               /* 信息色：进行中/处理中状态，与 Primary 一致 */
 
     /* Success 色彩体系（浅→深渐变） */
     --color-success-bg: #f6ffed;           /* Success 浅色背景色 */
@@ -192,6 +192,37 @@ body,
     --screen-xl: 1200px;  /* 超大屏幕：≥ 1200px */
     --screen-xxl: 1600px; /* 超超大屏幕：≥ 1600px */
   }
+
+:root[data-theme='dark'] {
+    --color-primary-bg: #111f3c;
+    --color-primary-bg-hover: #163667;
+    --color-primary-border: #1554ad;
+    --color-primary-border-hover: #1668dc;
+    --color-primary-active: #4080ff;
+    --color-primary-text-active: #69a0ff;
+    --color-text: rgba(255, 255, 255, 0.88);
+    --color-text-secondary: rgba(255, 255, 255, 0.65);
+    --color-text-tertiary: rgba(255, 255, 255, 0.45);
+    --color-text-quaternary: rgba(255, 255, 255, 0.25);
+    --color-border: #424242;
+    --color-border-secondary: #303030;
+    --color-fill: rgba(255, 255, 255, 0.18);
+    --color-fill-secondary: rgba(255, 255, 255, 0.12);
+    --color-fill-tertiary: rgba(255, 255, 255, 0.08);
+    --color-fill-quaternary: rgba(255, 255, 255, 0.04);
+    --color-bg-container: #17191f;
+    --color-bg-elevated: #1f2229;
+    --color-bg-layout: #0f1115;
+    --color-bg-spotlight: rgba(255, 255, 255, 0.85);
+    --nav-color-bg-canvas: #0f1115;
+    --nav-color-text-active: rgba(255, 255, 255, 0.88);
+    --nav-color-sider: #0f1115;
+    --nav-color-sider-text-active: rgba(255, 255, 255, 0.88);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.32), 0 6px 20px rgba(0, 0, 0, 0.18);
+    --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.42);
+    --shadow-modal: 0 12px 48px rgba(0, 0, 0, 0.48);
+    --shadow-tooltip: 0 6px 20px rgba(0, 0, 0, 0.42);
+}
 
 /* ================================================================
  * 模板工具类
@@ -2482,4 +2513,3 @@ body,
 .ant-badge-count-sm {
   box-shadow: none !important;
 }
-

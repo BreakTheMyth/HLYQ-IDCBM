@@ -1,4 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
+use app\modules\install\contract\ConnectionProbeInterface;
+use app\modules\install\contract\EnvironmentInspectorInterface;
+use app\modules\install\contract\InstallationDatabaseInterface;
+use app\modules\install\contract\InstallationStateRepositoryInterface;
+use app\modules\install\contract\RuntimeReloaderInterface;
+use app\modules\install\infrastructure\ConnectionProbe;
+use app\modules\install\infrastructure\EnvironmentInspector;
+use app\modules\install\infrastructure\FileInstallationStateRepository;
+use app\modules\install\infrastructure\PdoInstallationDatabase;
+use app\modules\install\infrastructure\WorkermanRuntimeReloader;
 /**
  * This file is part of webman.
  *
@@ -12,4 +25,10 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-return [];
+return [
+    EnvironmentInspectorInterface::class => DI\autowire(EnvironmentInspector::class),
+    ConnectionProbeInterface::class => DI\autowire(ConnectionProbe::class),
+    InstallationDatabaseInterface::class => DI\autowire(PdoInstallationDatabase::class),
+    InstallationStateRepositoryInterface::class => DI\autowire(FileInstallationStateRepository::class),
+    RuntimeReloaderInterface::class => DI\autowire(WorkermanRuntimeReloader::class),
+];

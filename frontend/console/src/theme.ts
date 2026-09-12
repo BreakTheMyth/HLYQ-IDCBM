@@ -4,7 +4,7 @@ const borderRadius = 2
 
 export const appTheme: ThemeConfig = {
   token: {
-    colorPrimary: '#1677FF',
+    colorPrimary: '#165DFF',
     borderRadius,
     borderRadiusLG: borderRadius,
     borderRadiusSM: borderRadius,

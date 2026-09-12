@@ -1,4 +1,8 @@
 <?php
+
+declare(strict_types=1);
+
+use app\modules\install\middleware\InstallGuardMiddleware;
 /**
  * This file is part of webman.
  *
@@ -12,4 +16,8 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-return [];
+return [
+    '' => [
+        InstallGuardMiddleware::class,
+    ],
+];

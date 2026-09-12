@@ -3,5 +3,16 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/app/console/',
   plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+  },
+  preview: {
+    host: '0.0.0.0',
+  },
+  build: {
+    outDir: '../../backend/public/app/console',
+    emptyOutDir: true,
+  },
 })

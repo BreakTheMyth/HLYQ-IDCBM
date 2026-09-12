@@ -22,33 +22,32 @@ use Workerman\Timer;
 use Workerman\Worker;
 
 /**
- * Class FileMonitor
- * @package process
+ * 监控项目文件和工作进程内存并触发安全重载。
  */
 class Monitor
 {
     /**
-     * @var array
+     * @var list<string> 需要监控的文件或目录
      */
     protected array $paths = [];
 
     /**
-     * @var array
+     * @var list<string> 需要监控的文件扩展名
      */
     protected array $extensions = [];
 
     /**
-     * @var array
+     * @var array<string, int> 进程启动时已经加载的文件
      */
     protected array $loadedFiles = [];
 
     /**
-     * @var int
+     * @var int Workerman 主进程 PID
      */
     protected int $ppid = 0;
 
     /**
-     * Pause monitor
+     * 暂停文件与内存监控。
      * @return void
      */
     public static function pause(): void
@@ -57,7 +56,7 @@ class Monitor
     }
 
     /**
-     * Resume monitor
+     * 恢复文件与内存监控。
      * @return void
      */
     public static function resume(): void
@@ -69,8 +68,8 @@ class Monitor
     }
 
     /**
-     * Whether monitor is paused
-     * @return bool
+     * 判断监控是否处于暂停状态。
+     * @return bool 已暂停时返回 true
      */
     public static function isPaused(): bool
     {
@@ -79,8 +78,8 @@ class Monitor
     }
 
     /**
-     * Lock file
-     * @return string
+     * 获取监控暂停锁文件路径。
+     * @return string 监控暂停锁文件绝对路径
      */
     protected static function lockFile(): string
     {
@@ -88,10 +87,10 @@ class Monitor
     }
 
     /**
-     * FileMonitor constructor.
-     * @param $monitorDir
-     * @param $monitorExtensions
-     * @param array $options
+     * 初始化文件与内存监控器。
+     * @param string|list<string>      $monitorDir        需要监控的文件或目录
+     * @param list<string>             $monitorExtensions 需要监控的文件扩展名
+     * @param array<string, mixed>     $options           文件与内存监控选项
      */
     public function __construct($monitorDir, $monitorExtensions, array $options = [])
     {
@@ -126,8 +125,9 @@ class Monitor
     }
 
     /**
-     * @param $monitorDir
-     * @return bool
+     * 检查指定文件或目录是否发生可重载变更。
+     * @param string $monitorDir 需要检查的文件或目录
+     * @return bool 已触发或需要触发重载时返回 true
      */
     public function checkFilesChange($monitorDir): bool
     {
@@ -149,7 +149,9 @@ class Monitor
         $count = 0;
         foreach ($iterator as $file) {
             $count ++;
-            /** @var SplFileInfo $file */
+            /**
+             * @var SplFileInfo $file 当前遍历文件
+             */
             if (is_dir($file->getRealPath())) {
                 continue;
             }
@@ -187,7 +189,8 @@ class Monitor
     }
 
     /**
-     * @return int
+     * 获取仍然存活的 Workerman 主进程 PID。
+     * @return int 主进程 PID，不存在时返回 0
      */
     public function getMasterPid(): int
     {
@@ -210,7 +213,8 @@ class Monitor
     }
 
     /**
-     * @return bool
+     * 检查所有配置的监控路径。
+     * @return bool 任一监控路径触发重载时返回 true
      */
     public function checkAllFilesChange(): bool
     {
@@ -226,7 +230,8 @@ class Monitor
     }
 
     /**
-     * @param $memoryLimit
+     * 检查工作进程内存并终止超过限制的进程。
+     * @param int $memoryLimit 内存限制，单位为 MiB
      * @return void
      */
     public function checkMemory($memoryLimit): void
@@ -262,9 +267,9 @@ class Monitor
     }
 
     /**
-     * Get memory limit
-     * @param $memoryLimit
-     * @return int
+     * 将 PHP 内存限制转换为监控阈值。
+     * @param int|string|null $memoryLimit 内存限制配置
+     * @return int 监控阈值，单位为 MiB；0 表示不限制
      */
     protected function getMemoryLimit($memoryLimit): int
     {

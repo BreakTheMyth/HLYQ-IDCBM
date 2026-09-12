@@ -1,30 +1,19 @@
 {
-  "name": "workerman/webman",
+  "name": "haoliangyunqing/hlyq-idcbm",
   "type": "project",
   "keywords": [
     "high performance",
     "http service"
   ],
-  "homepage": "https://www.workerman.net",
-  "license": "MIT",
-  "description": "High performance HTTP Service Framework.",
-  "authors": [
-    {
-      "name": "walkor",
-      "email": "walkor@workerman.net",
-      "homepage": "https://www.workerman.net",
-      "role": "Developer"
-    }
-  ],
+  "homepage": "https://github.com/haoliangyunqing/HLYQ-IDCBM",
+  "license": "AGPL-3.0-or-later",
+  "description": "皓量云擎IDC业务管理系统后端",
   "support": {
-    "email": "walkor@workerman.net",
-    "issues": "https://github.com/walkor/webman/issues",
-    "forum": "https://wenda.workerman.net/",
-    "wiki": "https://workerman.net/doc/webman",
-    "source": "https://github.com/walkor/webman"
+    "issues": "https://github.com/haoliangyunqing/HLYQ-IDCBM/issues",
+    "source": "https://github.com/haoliangyunqing/HLYQ-IDCBM"
   },
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.4",
     "workerman/webman-framework": "^2.1",
     "monolog/monolog": "^2.0",
     "webman/console": "^2.2",
@@ -54,7 +43,7 @@
   },
   "autoload": {
     "psr-4": {
-      "": "./",
+      "support\\": "./support",
       "app\\": "./app",
       "App\\": "./app",
       "app\\View\\Components\\": "./app/view/components"
