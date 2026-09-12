@@ -235,11 +235,11 @@ function AdminLayout() {
       <header className="header">
         <div className="header-left">
           <div className="logo-section">
-            <div className="logo" aria-label="HLYQ-IDCBM 运营后台">
+            <div className="logo" aria-label="皓量云擎IDC业务管理系统运营后台">
               <div className="logo-icon" aria-hidden="true">
                 <CloudServerOutlined />
               </div>
-              <span className="brand-name">HLYQ-IDCBM</span>
+              <span className="brand-name">皓量云擎</span>
             </div>
           </div>
 

@@ -3,7 +3,7 @@ import { Button, Card, Flex, Tag, Typography } from 'antd'
 function App() {
   return (
     <main className="app-placeholder">
-      <Card className="app-placeholder__card" title="HLYQ-IDCBM 会员控制台">
+      <Card className="app-placeholder__card" title="皓量云擎IDC业务管理系统 - 会员控制台">
         <Flex vertical gap={16} align="flex-start">
           <Tag color="processing">React 19 + Ant Design 6</Tag>
           <Typography.Text type="secondary">
