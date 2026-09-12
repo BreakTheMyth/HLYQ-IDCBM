@@ -12,15 +12,15 @@
 ## 目录结构
 
 ```text
-backend/           Webman 后端
-frontend/admin/    运营后台
-frontend/console/  会员控制台
-frontend/packages/ 前端共享包
-themes/            官网主题
-extensions/        产品与服务插件
-contracts/         API、产品和插件契约
-docs/              架构及开发文档
-deploy/            部署配置
+backend/             Webman 后端
+backend/plugin/      Webman 应用插件
+backend/themes/      官网主题
+frontend/admin/      运营后台
+frontend/console/    会员控制台
+frontend/packages/   前端共享包
+contracts/           API、产品和插件契约
+docs/                架构及开发文档
+deploy/              部署配置
 ```
 
 ## 本地开发
