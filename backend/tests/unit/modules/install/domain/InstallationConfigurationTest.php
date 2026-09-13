@@ -146,7 +146,7 @@ final class InstallationConfigurationTest extends TestCase
                 'database' => 0,
             ],
             'system' => [
-                'site_name' => '皓量云擎IDC业务管理系统',
+                'site_name' => '皓量云擎业务管理系统',
                 'site_url' => 'https://example.com/',
                 'admin_path' => '/Manage-Center/',
             ],

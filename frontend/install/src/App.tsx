@@ -129,7 +129,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
             database: 0,
           },
           system: {
-            site_name: '皓量云擎IDC业务管理系统',
+            site_name: '皓量云擎业务管理系统',
             site_url: window.location.origin,
             admin_path: data.defaults.admin_path,
           },
@@ -660,7 +660,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
         <Result
           className="installer-result"
           status="success"
-          title="皓量云擎IDC业务管理系统安装成功"
+          title="皓量云擎业务管理系统安装成功"
           subTitle="请立即保存管理员信息，离开本页后将无法再次查看明文密码。"
           extra={[
             <Button key="home" href={finalResult.home_url}>访问首页</Button>,
@@ -708,7 +708,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
         <header className="installer-header">
           <div className="brand-mark" aria-hidden="true">皓</div>
           <div>
-            <Text strong className="brand-name">皓量云擎IDC业务管理系统</Text>
+            <Text strong className="brand-name">皓量云擎业务管理系统</Text>
             <Text type="secondary" className="brand-subtitle">在线安装向导</Text>
           </div>
           <Tag color="blue">v0.1.0</Tag>

@@ -301,7 +301,7 @@ function AdminLayout({ children, themeMode, onThemeModeChange }: AdminLayoutProp
     <div className={`admin-shell layout-${layoutMode}`}>
       <header className="admin-header">
         <div className={`brand-section ${isCollapsed && !isMobile ? 'collapsed' : ''}`}>
-          <div className="brand" aria-label="皓量云擎IDC业务管理系统运营后台">
+          <div className="brand" aria-label="皓量云擎业务管理系统运营后台">
             <img className="brand-logo-image" src={logoUrl} alt="" aria-hidden="true" />
             <span className="brand-name">皓量云擎</span>
           </div>
