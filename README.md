@@ -59,9 +59,9 @@ pnpm dev
 
 ## 分支约定
 
-- `main`：默认和稳定分支，所有变更通过 Pull Request 合并
+- `master`：默认和稳定分支，所有变更通过 Pull Request 合并
 - 外部贡献者先 Fork 本仓库，再在自己的 Fork 中创建 `feature/*` 或 `fix/*` 分支
-- 项目协作者从 `main` 创建短期功能或修复分支，完成后向 `main` 提交 Pull Request
+- 项目协作者从 `master` 创建短期功能或修复分支，完成后向 `master` 提交 Pull Request
 
 ## 开源协议
 

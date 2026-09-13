@@ -52,8 +52,8 @@
 
 ## Git 工作流
 
-- `main` 是默认和稳定分支；外部贡献者通过 Fork + Pull Request 参与开发。
-- 项目协作者从 `main` 创建短期功能或修复分支，完成后向 `main` 提交 Pull Request。
+- `master` 是默认和稳定分支；外部贡献者通过 Fork + Pull Request 参与开发。
+- 项目协作者从 `master` 创建短期功能或修复分支，完成后向 `master` 提交 Pull Request。
 - 普通贡献分支建议使用 `feature/<name>`、`fix/<name>`、`docs/<name>`；自动化代理同时遵循其运行环境要求的分支前缀。
 - 每个提交只包含一个清晰目标，不混入无关格式化、生成文件或用户未授权的修改。
 - 提交前检查 `git status`、暂存差异、敏感信息和大文件。
