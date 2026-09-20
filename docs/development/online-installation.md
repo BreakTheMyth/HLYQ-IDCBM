@@ -38,7 +38,7 @@
 
 ## 本地依赖与构建产物
 
-安装器离线使用固定版本 Ant Design 6.6.3。Ant Design JavaScript 与 React 一起由 Vite 打入安装器应用产物，避免外置 UMD 与 React 运行时不一致；浏览器运行期间不会访问 CDN。样式文件使用预先下载的本地发行文件：
+安装器离线使用固定版本 Ant Design 6.6.4。Ant Design JavaScript 与 React 一起由 Vite 打入安装器应用产物，避免外置 UMD 与 React 运行时不一致；浏览器运行期间不会访问 CDN。样式文件使用预先下载的本地发行文件：
 
 ```text
 backend/public/install-assets/vendor/antd.css
