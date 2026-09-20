@@ -59,7 +59,7 @@ export interface AdminNavigationSelection {
   parentMenuKey: string | null
 }
 
-/** 后台占位页面路由定义。 */
+/** 后台业务页面路由定义。 */
 export interface AdminPageRoute {
   key: string
   path: string

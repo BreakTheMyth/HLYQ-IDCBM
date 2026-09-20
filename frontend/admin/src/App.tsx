@@ -7,7 +7,7 @@ import { adminPageRoutes } from './config/adminNavigation.tsx'
 import AdminLayout from './layouts/AdminLayout.tsx'
 import { applyThemeMode, createAppTheme, getInitialThemeMode, type AppThemeMode } from './theme.ts'
 
-const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage.tsx'))
+const AdminRoutePage = lazy(() => import('./pages/AdminRoutePage.tsx'))
 
 function App() {
   const [themeMode, setThemeMode] = useState<AppThemeMode>(getInitialThemeMode)
@@ -30,7 +30,7 @@ function App() {
               <Route
                 key={route.key}
                 path={route.path}
-                element={<PlaceholderPage title={route.title} />}
+                element={<AdminRoutePage route={route} />}
               />
             ))}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
