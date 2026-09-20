@@ -14,7 +14,7 @@
   },
   "require": {
     "php": ">=8.4",
-    "workerman/webman-framework": "^2.1",
+    "workerman/webman-framework": "~2.2",
     "monolog/monolog": "^2.0",
     "webman/console": "^2.2",
     "webman/database": "^2.1",
@@ -36,7 +36,8 @@
     "webman/openai": "^3.1",
     "guzzlehttp/guzzle": "^8.2",
     "zoujingli/ip2region": "^3.0",
-    "ramsey/uuid": "^3.9"
+    "ramsey/uuid": "^3.9",
+    "workerman/workerman": "~5.1"
   },
   "suggest": {
     "ext-event": "For better performance. "
