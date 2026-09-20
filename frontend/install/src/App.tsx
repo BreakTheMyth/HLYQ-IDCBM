@@ -27,7 +27,7 @@ interface PhaseItem {
 const phaseDefinitions: Array<Omit<PhaseItem, 'status'>> = [
   { key: 'database', title: '初始化数据库', description: '验证连接并创建基础表结构' },
   { key: 'system', title: '写入系统数据', description: '保存网站配置并创建管理员账号' },
-  { key: 'configuration', title: '生成运行配置', description: '原子写入 .env 配置文件' },
+  { key: 'configuration', title: '生成运行配置', description: '安全写入系统运行配置' },
   { key: 'finalize', title: '完成安装', description: '写入安装标记并刷新运行配置' },
 ]
 
@@ -641,7 +641,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
             className="installer-result"
             status="error"
             title="安装失败"
-            subTitle={installError || '未能取得安装结果，请检查服务端日志后重试。'}
+            subTitle={installError || '未能取得安装结果，请检查系统日志后重试。'}
             extra={[
               <Button key="back" type="primary" onClick={() => setCurrent(3)}>
                 返回检查配置

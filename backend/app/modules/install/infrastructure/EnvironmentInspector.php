@@ -54,7 +54,7 @@ final class EnvironmentInspector implements EnvironmentInspectorInterface
             $mysqlDriverAvailable ? '可用' : '不可用',
             $mysqlDriverAvailable,
             true,
-            $mysqlDriverAvailable ? '' : '当前 CLI PHP 未加载 pdo_mysql 驱动',
+            $mysqlDriverAvailable ? '' : '当前 PHP 环境未加载 pdo_mysql 驱动，请安装并启用后重新检测',
         );
 
         $basePath = base_path(false);
@@ -62,22 +62,22 @@ final class EnvironmentInspector implements EnvironmentInspectorInterface
         $envWritable = is_file($envPath) ? is_writable($envPath) : is_writable($basePath);
         $items[] = $this->item(
             'env_writable',
-            '.env 配置写入',
+            '系统配置写入',
             $envWritable ? '可写' : '不可写',
             $envWritable,
             true,
-            $envWritable ? '' : '请确保 Webman 运行用户可以创建或修改 backend/.env',
+            $envWritable ? '' : '请为系统安装目录授予当前服务进程创建和修改配置文件的权限',
         );
 
         $runtimePath = runtime_path();
         $runtimeWritable = is_dir($runtimePath) && is_writable($runtimePath);
         $items[] = $this->item(
             'runtime_writable',
-            '运行目录',
+            '系统运行目录',
             $runtimeWritable ? '可写' : '不可写',
             $runtimeWritable,
             true,
-            $runtimeWritable ? '' : '请确保 backend/runtime 目录存在且可写',
+            $runtimeWritable ? '' : '请确保系统运行目录存在，并授予当前服务进程写入权限',
         );
 
         $assetPaths = [
@@ -94,11 +94,11 @@ final class EnvironmentInspector implements EnvironmentInspectorInterface
         );
         $items[] = $this->item(
             'install_assets',
-            '安装器前端资源',
+            '安装页面资源',
             $assetsReadable ? '完整' : '缺失',
             $assetsReadable,
             true,
-            $assetsReadable ? '' : '请重新构建安装器并确保 backend/public/install-assets 已完整上传',
+            $assetsReadable ? '' : '安装页面资源不完整，请重新上传完整的系统安装包',
         );
 
         $eventLoaded = extension_loaded('event');

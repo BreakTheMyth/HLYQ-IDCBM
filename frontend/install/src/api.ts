@@ -31,7 +31,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     payload = (await response.json()) as ApiResponse<T>
   } catch {
-    throw new Error(`服务端返回了无法识别的响应（HTTP ${response.status}）`)
+    throw new Error(`安装服务返回了无法识别的响应（HTTP ${response.status}）`)
   }
 
   if (!response.ok || payload.code !== 0) {

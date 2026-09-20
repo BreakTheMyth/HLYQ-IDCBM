@@ -210,7 +210,7 @@ final class FileInstallationStateRepository implements InstallationStateReposito
         $path = base_path(false) . '/.env';
         $existing = is_file($path) ? file_get_contents($path) : '';
         if ($existing === false) {
-            throw new InstallationException('无法读取现有 .env 配置', 500);
+            throw new InstallationException('系统配置文件读取失败，请检查文件权限后重试', 500);
         }
 
         $remaining = $values;
@@ -307,7 +307,7 @@ final class FileInstallationStateRepository implements InstallationStateReposito
     {
         $path = runtime_path() . '/install';
         if (!is_dir($path) && !mkdir($path, 0700, true) && !is_dir($path)) {
-            throw new InstallationException('无法创建安装运行目录，请检查 runtime 权限', 500);
+            throw new InstallationException('无法创建安装运行目录，请检查系统目录写入权限', 500);
         }
 
         return $path;

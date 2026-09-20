@@ -42,12 +42,12 @@ final readonly class InstallController
     {
         $path = public_path() . '/install-assets/app/index.html';
         if (!is_file($path)) {
-            throw new InstallationException('安装器前端资源不存在，请先构建 frontend/install', 500);
+            throw new InstallationException('安装页面资源缺失，请重新上传完整的系统安装包', 500);
         }
 
         $html = file_get_contents($path);
         if ($html === false) {
-            throw new InstallationException('安装器前端资源读取失败', 500);
+            throw new InstallationException('安装页面资源无法读取，请检查站点文件权限或重新上传完整安装包', 500);
         }
 
         return response($html, 200, [
