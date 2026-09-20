@@ -35,6 +35,8 @@ cp .env.example .env
 php start.php start
 ```
 
+后端新增业务接口前请先阅读 [Webman 后端路由开发规范](docs/development/backend-routing.md)。
+
 ### 运营后台
 
 ```bash

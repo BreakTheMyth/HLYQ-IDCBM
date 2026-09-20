@@ -65,6 +65,21 @@ app/
 - 常驻对象持有的连接、缓存和监听器必须明确生命周期，避免跨请求数据泄漏和重复注册。
 - 配置、进程定义、Composer 依赖或启动期加载内容变更后，必须说明是否需要 reload/restart，不得假设热更新自动生效。
 
+## 路由规范
+
+- 全局必须在 `config/route.php` 调用 `Route::disableDefaultRoute()`，禁止依赖 Webman 的默认控制器路由暴露接口；使用 Attribute 路由的控制器仍须添加 `#[DisableDefaultRoute]`，形成控制器级防护。
+- 新增核心业务 API 默认使用 Webman 2.2 的 PHP Attribute 路由，并通过 `#[RouteGroup]` 声明版本化前缀、通过 `#[Get]`、`#[Post]`、`#[Put]`、`#[Patch]` 或 `#[Delete]` 显式声明路径、请求方法及唯一名称。
+- 禁止在业务接口中使用不带路径的 `#[Get]`、`#[Post]` 等 Attribute，禁止使用 `#[Any]` 代替明确的 HTTP 方法；兼容或兜底场景确需使用 `#[Any]` 时必须在代码注释和测试中说明原因。
+- 核心 API 前缀固定为 `/api/admin/v1`、`/api/console/v1` 和 `/api/public/v1`；在线安装接口保留 `/api/install` 作为安装期特例。破坏性接口变更必须新增主版本前缀，不得静默改变既有版本语义。
+- 路径使用小写复数名词和短横线，禁止把控制器名、PHP 命名空间或内部实现细节暴露到 URL；普通 CRUD 使用 HTTP 方法表达语义，状态流转使用清晰的子资源或动作路径。
+- 路由名称使用 `<入口>.<复数资源>.<动作>`，例如 `admin.products.index`、`console.orders.show`；名称发布后视为稳定契约，必须全局唯一，不得随意修改或复用为其他语义。
+- 系统入口、官网与主题入口、在线安装器、SPA catch-all、健康检查、全局 fallback 和运行时动态分发继续集中定义在 `config/route.php`；普通业务 API 不得以闭包路由实现。
+- 认证类中间件优先声明在控制器类上，限流或接口专属中间件可以声明在方法上；Attribute 中间件只负责 HTTP 横切能力，细粒度权限、对象归属和业务授权仍必须由 Application 或权限服务校验。
+- 插件可以使用 Attribute 路由，但必须使用 `/api/<入口>/v1/plugins/<plugin_id>` 前缀，并在插件清单中同步声明入口、权限、版本和路由能力；插件启用、禁用、安装、升级或路由变更后必须 reload/restart。
+- Attribute 路由在 Worker 启动时扫描并注册；不得把数据库查询、网络请求、环境写入或其他有副作用的操作放入 Attribute 构造、控制器静态初始化或路由配置加载阶段。
+- Controller 继续遵循 HTTP 边界职责，只接收和转换请求、调用 Application 用例并生成统一响应；使用 Attribute 路由不改变现有分层、异常处理和 `ApiResponse` 规范。
+- 路由的详细设计、示例、迁移策略和验收清单见 `docs/development/backend-routing.md`。
+
 ## 复用与工具类规范
 
 - 多处重复且语义稳定的通用操作可以封装为工具类或公共服务，避免复制粘贴；封装前应确认输入、输出、异常和副作用边界清晰，不能仅因代码片段看起来相似就过早抽象。
