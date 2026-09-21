@@ -55,7 +55,10 @@ final class Handler extends BaseHandler
      */
     public function report(Throwable $exception): void
     {
-        if ($this->shouldntReport($exception)) {
+        $reportableBusinessFailure = $exception instanceof BusinessException
+            && $exception->httpStatus() >= 500
+            && $exception->getPrevious() !== null;
+        if (!$reportableBusinessFailure && $this->shouldntReport($exception)) {
             return;
         }
 
@@ -70,7 +73,10 @@ final class Handler extends BaseHandler
             ];
         }
 
-        $this->logger->error('未捕获的系统异常', $context);
+        $this->logger->error(
+            $reportableBusinessFailure ? '业务异常包含未预期的底层错误' : '未捕获的系统异常',
+            $context,
+        );
     }
 
     /**

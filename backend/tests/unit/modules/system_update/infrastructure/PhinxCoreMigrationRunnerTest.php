@@ -11,6 +11,7 @@ use app\modules\system_update\infrastructure\PhinxCoreMigrationRunner;
 use app\modules\system_update\infrastructure\SystemUpdatePdoFactory;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 /**
  * 验证核心迁移可用于全新数据库、重复执行和旧安装基线接管。
@@ -122,6 +123,24 @@ final class PhinxCoreMigrationRunnerTest extends TestCase
         $this->expectExceptionMessage('缺失的迁移记录');
 
         $runner->migrate($configuration);
+    }
+
+    /**
+     * 验证 Phinx 运行时环境包含 MySQL 适配器必需的数据库名称。
+     * @return void
+     * @throws \ReflectionException 迁移管理器私有工厂方法无法反射时抛出
+     */
+    public function testRuntimeEnvironmentContainsDatabaseName(): void
+    {
+        $configuration = $this->configuration();
+        $runner = new PhinxCoreMigrationRunner(new SystemUpdatePdoFactory(), new PdoSchemaInspector());
+        $managerMethod = new ReflectionMethod($runner, 'manager');
+
+        [$manager] = $managerMethod->invoke($runner, $configuration);
+        $environment = $manager->getConfig()->getEnvironment('runtime');
+
+        self::assertIsArray($environment);
+        self::assertSame($configuration->database, $environment['name'] ?? null);
     }
 
     /**

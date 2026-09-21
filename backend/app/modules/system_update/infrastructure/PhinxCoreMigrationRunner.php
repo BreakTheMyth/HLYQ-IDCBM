@@ -111,6 +111,7 @@ final readonly class PhinxCoreMigrationRunner implements CoreMigrationRunnerInte
                 'default_migration_table' => $configuration->tablePrefix . 'migration_versions',
                 'default_environment' => self::ENVIRONMENT,
                 self::ENVIRONMENT => [
+                    'name' => $configuration->database,
                     'connection' => $this->connections->connect($configuration),
                     'migration_table' => $configuration->tablePrefix . 'migration_versions',
                     'table_prefix' => $configuration->tablePrefix,

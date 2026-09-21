@@ -82,6 +82,32 @@ final class HandlerTest extends TestCase
     }
 
     /**
+     * 验证包含底层异常的服务器端业务失败会进入系统错误日志。
+     * @return void
+     */
+    public function testServerBusinessFailureWithPreviousExceptionIsWrittenToSystemErrorLog(): void
+    {
+        $testHandler = new TestHandler();
+        $logger = new Logger('exception-test', [$testHandler]);
+        $handler = new Handler($logger, false, new ApiResponse());
+        $exception = new BusinessException(
+            '初始化数据表结构失败',
+            ApiErrorCode::INTERNAL_ERROR,
+            500,
+            previous: new RuntimeException('Undefined array key "name"'),
+        );
+
+        $handler->report($exception);
+
+        self::assertTrue($testHandler->hasErrorRecords());
+        self::assertCount(1, $testHandler->getRecords());
+        self::assertSame(
+            '业务异常包含未预期的底层错误',
+            $testHandler->getRecords()[0]['message'],
+        );
+    }
+
+    /**
      * 创建期望 JSON 响应的 API 测试请求。
      * @return Request API 测试请求
      */

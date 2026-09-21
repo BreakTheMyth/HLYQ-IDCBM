@@ -59,7 +59,7 @@ final class CreateInitialCoreTables extends AbstractMigration
                 'engine' => 'InnoDB',
                 'collation' => 'utf8mb4_unicode_ci',
             ])
-                ->addColumn('id', 'integer', ['signed' => false])
+                ->addColumn('id', 'integer', ['signed' => false, 'null' => false])
                 ->addColumn('version', 'string', ['limit' => 32])
                 ->addColumn('admin_path', 'string', ['limit' => 32])
                 ->addColumn('agreement_version', 'string', ['limit' => 32])
