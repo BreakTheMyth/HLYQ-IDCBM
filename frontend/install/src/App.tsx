@@ -466,7 +466,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                     aria-hidden="true"
                     draggable={false}
                   />
-                  <span>MySQL 8.0</span>
+                  <span>MySQL</span>
                 </Space>
               )}
               className="form-section-card"
