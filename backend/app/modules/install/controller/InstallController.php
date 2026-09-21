@@ -8,6 +8,7 @@ use app\modules\install\application\InstallApplicationService;
 use app\modules\install\contract\InstallationStateRepositoryInterface;
 use app\modules\install\domain\InstallationConfiguration;
 use app\modules\install\exception\InstallationException;
+use app\modules\install\validation\InstallRequestValidator;
 use app\shared\http\ApiErrorCode;
 use app\shared\http\ApiResponse;
 use JsonException;
@@ -129,8 +130,11 @@ final readonly class InstallController
     public function testConnections(Request $request): Response
     {
         $this->assertToken($request);
+        $configuration = InstallRequestValidator::make([
+            'configuration' => $request->post(),
+        ])->validateConnections();
 
-        return $this->apiResponse->success($request, $this->installer->testConnections($request->post()));
+        return $this->apiResponse->success($request, $this->installer->testConnections($configuration));
     }
 
     /**
@@ -144,13 +148,15 @@ final readonly class InstallController
     public function execute(Request $request): Response
     {
         $token = $this->assertToken($request);
-        $phase = trim((string) $request->post('phase', ''));
-        $configuration = $request->post('configuration', []);
-        if (!is_array($configuration)) {
-            throw new InstallationException('安装配置格式不正确');
-        }
+        $input = InstallRequestValidator::make([
+            'phase' => $request->post('phase'),
+            'configuration' => $request->post('configuration'),
+        ])->validateExecution();
 
-        return $this->apiResponse->success($request, $this->installer->execute($phase, $configuration, $token));
+        return $this->apiResponse->success(
+            $request,
+            $this->installer->execute($input['phase'], $input['configuration'], $token),
+        );
     }
 
     /**

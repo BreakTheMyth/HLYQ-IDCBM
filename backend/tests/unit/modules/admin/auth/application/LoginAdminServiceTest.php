@@ -55,7 +55,7 @@ final class LoginAdminServiceTest extends TestCase
 
         try {
             $service->execute(
-                AdminLoginCredentials::fromArray(['username' => 'admin_user', 'password' => 'Wrong123!']),
+                AdminLoginCredentials::fromValidatedInput('admin_user', 'Wrong123!'),
                 '127.0.0.1',
             );
             self::fail('密码错误时应拒绝登录');
@@ -110,10 +110,7 @@ final class LoginAdminServiceTest extends TestCase
      */
     private function credentials(): AdminLoginCredentials
     {
-        return AdminLoginCredentials::fromArray([
-            'username' => 'admin_user',
-            'password' => 'Secure123!',
-        ]);
+        return AdminLoginCredentials::fromValidatedInput('admin_user', 'Secure123!');
     }
 }
 

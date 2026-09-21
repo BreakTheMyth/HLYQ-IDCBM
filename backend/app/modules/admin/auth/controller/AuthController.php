@@ -7,7 +7,9 @@ namespace app\modules\admin\auth\controller;
 use app\modules\admin\auth\application\AdminAuthenticationContext;
 use app\modules\admin\auth\application\LoginAdminService;
 use app\modules\admin\auth\domain\AdminLoginCredentials;
+use app\modules\admin\auth\exception\AdminAuthenticationException;
 use app\modules\admin\auth\middleware\AdminAuthMiddleware;
+use app\modules\admin\auth\validation\AdminLoginValidator;
 use app\shared\http\ApiResponse;
 use JsonException;
 use Random\RandomException;
@@ -44,6 +46,7 @@ final readonly class AuthController
      * 使用管理员账号和密码登录。
      * @param Request $request 当前 HTTP 请求
      * @return Response 包含管理员资料并写入 HttpOnly JWT Cookie 的响应
+     * @throws AdminAuthenticationException 登录信息校验或管理员认证失败时抛出
      * @throws JsonException 响应数据无法序列化时抛出
      * @throws RandomException 请求追踪标识或 JWT 标识无法生成时抛出
      */
@@ -51,7 +54,16 @@ final readonly class AuthController
     #[Limit(limit: 10, ttl: 60, key: Limit::IP, message: '登录尝试过于频繁，请稍后重试')]
     public function login(Request $request): Response
     {
-        $credentials = AdminLoginCredentials::fromArray((array) $request->post());
+        $input = AdminLoginValidator::make([
+            'username' => $request->post('username'),
+            'password' => $request->post('password'),
+            'remember' => $request->post('remember', false),
+        ])->validateCredentials();
+        $credentials = AdminLoginCredentials::fromValidatedInput(
+            $input['username'],
+            $input['password'],
+            $input['remember'],
+        );
         $result = $this->login->execute($credentials, $request->getRemoteIp());
         $response = $this->apiResponse->success($request, [
             'user' => $result->account->profile(),

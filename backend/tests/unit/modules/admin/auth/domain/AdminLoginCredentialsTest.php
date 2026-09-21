@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace tests\unit\modules\admin\auth\domain;
 
 use app\modules\admin\auth\domain\AdminLoginCredentials;
-use app\modules\admin\auth\exception\AdminAuthenticationException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * 验证管理员登录凭据的格式校验与记住登录选项。
+ * 验证管理员登录凭据保存已通过边界验证的数据。
  */
 final class AdminLoginCredentialsTest extends TestCase
 {
@@ -19,12 +18,11 @@ final class AdminLoginCredentialsTest extends TestCase
      */
     public function testRememberDefaultsToFalse(): void
     {
-        $credentials = AdminLoginCredentials::fromArray([
-            'username' => 'admin_user',
-            'password' => 'Secure123!',
-        ]);
+        $credentials = AdminLoginCredentials::fromValidatedInput('admin_user', 'Secure123!');
 
         self::assertFalse($credentials->remember);
+        self::assertSame('admin_user', $credentials->username);
+        self::assertSame('Secure123!', $credentials->password);
     }
 
     /**
@@ -33,33 +31,8 @@ final class AdminLoginCredentialsTest extends TestCase
      */
     public function testRememberCanBeEnabled(): void
     {
-        $credentials = AdminLoginCredentials::fromArray([
-            'username' => 'admin_user',
-            'password' => 'Secure123!',
-            'remember' => true,
-        ]);
+        $credentials = AdminLoginCredentials::fromValidatedInput('admin_user', 'Secure123!', true);
 
         self::assertTrue($credentials->remember);
-    }
-
-    /**
-     * 验证非布尔记住登录选项会被拒绝。
-     * @return void
-     */
-    public function testRememberMustBeBoolean(): void
-    {
-        try {
-            AdminLoginCredentials::fromArray([
-                'username' => 'admin_user',
-                'password' => 'Secure123!',
-                'remember' => 'true',
-            ]);
-            self::fail('非布尔记住登录选项应被拒绝');
-        } catch (AdminAuthenticationException $exception) {
-            self::assertSame(
-                ['errors' => ['remember' => ['记住我选项必须为布尔值']]],
-                $exception->data(),
-            );
-        }
     }
 }
