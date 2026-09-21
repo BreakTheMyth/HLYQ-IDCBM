@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Locale } from 'antd/es/locale'
 import {
@@ -10,10 +10,14 @@ import {
 import type {
   BootstrapData,
   ConnectionResult,
+  EnvironmentItem,
   FinalResult,
   InstallationConfiguration,
   InstallPhase,
 } from './types'
+import logoUrl from './assets/logo-white.png'
+import mysqlIconUrl from './assets/mysql.svg'
+import redisIconUrl from './assets/redis.svg'
 
 type PhaseStatus = 'wait' | 'process' | 'finish' | 'error'
 
@@ -42,6 +46,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
   const {
     Alert,
     App: AntApp,
+    Badge,
     Button,
     Card,
     Checkbox,
@@ -51,6 +56,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
     Divider,
     Flex,
     Form,
+    Grid,
     Input,
     InputNumber,
     List,
@@ -59,6 +65,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
     Row,
     Space,
     Steps,
+    Table,
     Tag,
     Typography,
   } = antd
@@ -66,7 +73,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
 
   function InstallerContent() {
     const [form] = Form.useForm<InstallationConfiguration>()
-    const stepsScrollRef = useRef<HTMLDivElement>(null)
+    const screens = Grid.useBreakpoint()
     const { message } = AntApp.useApp()
     const [current, setCurrent] = useState(0)
     const [bootstrap, setBootstrap] = useState<BootstrapData | null>(null)
@@ -84,12 +91,12 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
 
     const stepItems = useMemo(
       () => [
-        { title: '使用协议' },
-        { title: '环境检测' },
-        { title: '数据库配置' },
-        { title: '系统配置' },
-        { title: '执行安装' },
-        { title: '安装结果' },
+        { title: <><span className="step-title-full">使用协议</span><span className="step-title-short">协议</span></> },
+        { title: <><span className="step-title-full">环境检测</span><span className="step-title-short">检测</span></> },
+        { title: <><span className="step-title-full">数据库配置</span><span className="step-title-short">数据库</span></> },
+        { title: <><span className="step-title-full">系统配置</span><span className="step-title-short">系统</span></> },
+        { title: <><span className="step-title-full">执行安装</span><span className="step-title-short">安装</span></> },
+        { title: <><span className="step-title-full">安装结果</span><span className="step-title-short">结果</span></> },
       ],
       [],
     )
@@ -97,15 +104,6 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
     useEffect(() => {
       void initialize()
     }, [])
-
-    useEffect(() => {
-      const container = stepsScrollRef.current
-      const activeStep = container?.querySelector<HTMLElement>('.ant-steps-item-active')
-      if (!container || !activeStep) return
-
-      const targetLeft = activeStep.offsetLeft - (container.clientWidth - activeStep.offsetWidth) / 2
-      container.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' })
-    }, [current])
 
     async function initialize() {
       setLoading(true)
@@ -317,24 +315,20 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
       const text = [
         `首页：${finalResult.home_url}`,
         `后台：${finalResult.admin_url}`,
-        `后台路径：/${finalResult.admin_path}`,
-        `管理员昵称：${finalResult.admin_nickname}`,
         `管理员账号：${finalResult.admin_username}`,
         `管理员密码：${finalResult.admin_password}`,
       ].join('\n')
       void copy(text, '全部安装信息')
     }
 
-    function copyableValue(value: string, label: string, secret = false): ReactNode {
+    function copyableValue(value: string, secret = false): ReactNode {
       return (
-        <Flex gap={8} align="center" wrap>
-          <Text code className={secret ? 'secret-value' : undefined}>
-            {value}
-          </Text>
-          <Button type="link" size="small" onClick={() => void copy(value, label)}>
-            复制
-          </Button>
-        </Flex>
+        <Text
+          className={`result-value${secret ? ' secret-value' : ''}`}
+          copyable={{ text: value, tooltips: ['复制', '复制成功'] }}
+        >
+          {value}
+        </Text>
       )
     }
 
@@ -342,7 +336,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
       return (
         <div className="step-panel">
           <div className="section-heading">
-            <Title level={3}>{bootstrap?.agreement.title}</Title>
+            <Title level={4}>{bootstrap?.agreement.title}</Title>
             <Paragraph type="secondary">
               请完整阅读宁波皓量云擎网络科技有限公司的软件使用协议。继续安装即表示你理解并接受协议条款。
             </Paragraph>
@@ -365,42 +359,88 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
         <div className="step-panel">
           <div className="section-heading with-action">
             <div>
-              <Title level={3}>服务器环境检测</Title>
-              <Paragraph type="secondary">所有必需项目通过后才能继续安装。</Paragraph>
+              <Title level={4}>环境检测</Title>
+              <Paragraph type="secondary">检测服务器环境是否满足系统安装要求。</Paragraph>
             </div>
-            <Button onClick={() => void refreshEnvironment()} loading={loading}>
+            <Button size="small" onClick={() => void refreshEnvironment()} loading={loading}>
               重新检测
             </Button>
           </div>
-          <Alert
-            type={environment?.passed ? 'success' : 'warning'}
-            showIcon
-            title={environment?.passed ? '当前环境满足安装要求' : '存在未通过的必需项目'}
-            description={environment?.passed ? '可以继续配置数据库。' : '请按提示修复后重新检测。'}
-          />
-          <List
-            className="environment-list"
+          <Table<EnvironmentItem>
+            className="environment-table"
             size="small"
+            bordered
             dataSource={environment?.items ?? []}
-            renderItem={(item) => (
-              <List.Item>
-                <div className="environment-item">
-                  <div className="environment-copy">
+            pagination={false}
+            rowKey="key"
+            tableLayout="fixed"
+            columns={[
+              {
+                key: 'item',
+                title: '检测项目',
+                render: (_, item) => (
+                  <div className="environment-name-cell">
                     <Space size={8} wrap>
                       <Text strong>{item.name}</Text>
-                      {item.required ? <Text type="danger">必需</Text> : <Text type="secondary">可选</Text>}
+                      {!item.required && <Text type="secondary">可选</Text>}
                     </Space>
-                    <Text type="secondary">{item.help || item.value}</Text>
+                    <Text className="environment-current-mobile" type="secondary">
+                      {item.value}
+                    </Text>
                   </div>
-                  <div className="environment-status">
-                    <Text>{item.value}</Text>
-                  <Tag color={item.passed ? 'success' : item.required ? 'error' : 'default'}>
-                    {item.passed ? '通过' : item.required ? '未通过' : '可选'}
-                  </Tag>
-                  </div>
-                </div>
-              </List.Item>
-            )}
+                ),
+              },
+              {
+                key: 'current',
+                title: '当前环境',
+                dataIndex: 'value',
+                width: 128,
+                responsive: ['sm'],
+              },
+              {
+                key: 'requirement',
+                title: '要求',
+                width: 168,
+                responsive: ['md'],
+                render: (_, item) => (
+                  <Text>
+                    {item.key === 'php_version'
+                      ? 'PHP 8.4 或更高版本'
+                      : item.required ? '必须安装或可用' : '非必需'}
+                  </Text>
+                ),
+              },
+              {
+                key: 'result',
+                title: '检测结果',
+                width: 112,
+                align: 'center',
+                render: (_, item) => (
+                  <Badge
+                    status={item.passed ? 'success' : item.required ? 'error' : 'default'}
+                    text={item.passed ? '通过' : item.required ? '未通过' : '可忽略'}
+                  />
+                ),
+              },
+              {
+                key: 'description',
+                title: '说明',
+                responsive: ['lg'],
+                render: (_, item) => (
+                  <Text type="secondary">
+                    {item.help || (item.passed ? '当前环境符合要求' : '请根据提示完成配置')}
+                  </Text>
+                ),
+              },
+            ]}
+          />
+          <Alert
+            className="environment-summary"
+            type={environment?.passed ? 'success' : 'warning'}
+            showIcon
+            title={environment?.passed
+              ? '环境检测通过！当前服务器环境符合安装要求，可以继续下一步。'
+              : '环境检测未通过，请修复必需项目后重新检测。'}
           />
         </div>
       )
@@ -410,13 +450,27 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
       return (
         <div className="step-panel">
           <div className="section-heading">
-            <Title level={3}>数据库与缓存配置</Title>
+            <Title level={4}>数据库与缓存配置</Title>
             <Paragraph type="secondary">数据库需要提前创建，安装账号需具备建表和写入权限。</Paragraph>
           </div>
 
           <div className="form-section-grid">
-            <div className="form-section">
-              <Title level={5}>MySQL 8.0</Title>
+            <Card
+              size="small"
+              title={(
+                <Space size={8} align="center">
+                  <img
+                    className="database-card-icon"
+                    src={mysqlIconUrl}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
+                  <span>MySQL 8.0</span>
+                </Space>
+              )}
+              className="form-section-card"
+            >
               <Row gutter={16}>
                 <Col xs={24} md={16}>
                   <Form.Item name={['mysql', 'host']} label="主机地址" rules={[{ required: true }]}>
@@ -428,12 +482,12 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                     <InputNumber min={1} max={65535} className="full-width" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} md={12}>
+                <Col span={24}>
                   <Form.Item name={['mysql', 'database']} label="数据库名称" rules={[{ required: true }]}>
                     <Input placeholder="请输入已创建的数据库名称" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} md={12}>
+                <Col span={24}>
                   <Form.Item
                     name={['mysql', 'username']}
                     label="数据库账号"
@@ -454,10 +508,24 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                   </Form.Item>
                 </Col>
               </Row>
-            </div>
+            </Card>
 
-            <div className="form-section">
-              <Title level={5}>Redis</Title>
+            <Card
+              size="small"
+              title={(
+                <Space size={8} align="center">
+                  <img
+                    className="database-card-icon"
+                    src={redisIconUrl}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
+                  <span>Redis</span>
+                </Space>
+              )}
+              className="form-section-card"
+            >
               <Row gutter={16}>
                 <Col xs={24} md={16}>
                   <Form.Item name={['redis', 'host']} label="主机地址" rules={[{ required: true }]}>
@@ -480,7 +548,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                   </Form.Item>
                 </Col>
               </Row>
-            </div>
+            </Card>
           </div>
 
           <Flex className="connection-actions" align="center" gap={12} wrap>
@@ -503,13 +571,12 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
       return (
         <div className="step-panel">
           <div className="section-heading">
-            <Title level={3}>系统与管理员配置</Title>
+            <Title level={4}>系统与管理员配置</Title>
             <Paragraph type="secondary">确认网站信息、安全后台路径和首个超级管理员账号。</Paragraph>
           </div>
 
           <div className="form-section-grid">
-            <div className="form-section">
-              <Title level={5}>网站基本信息</Title>
+            <Card size="small" title="网站基本信息" className="form-section-card">
               <Row gutter={16}>
                 <Col span={24}>
                   <Form.Item name={['system', 'site_name']} label="网站名称" rules={[{ required: true, min: 2, max: 80 }]}>
@@ -542,12 +609,11 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                   </Form.Item>
                 </Col>
               </Row>
-            </div>
+            </Card>
 
-            <div className="form-section">
-              <Title level={5}>管理员信息</Title>
+            <Card size="small" title="管理员信息" className="form-section-card">
               <Row gutter={16}>
-                <Col xs={24} md={12}>
+                <Col span={24}>
                   <Form.Item
                     name={['admin', 'nickname']}
                     label="管理员昵称"
@@ -556,7 +622,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                     <Input autoComplete="nickname" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} md={12}>
+                <Col span={24}>
                   <Form.Item
                     name={['admin', 'username']}
                     label="管理员账号"
@@ -606,7 +672,7 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
                   </Form.Item>
                 </Col>
               </Row>
-            </div>
+            </Card>
           </div>
         </div>
       )
@@ -616,13 +682,14 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
       return (
         <div className="step-panel execution-panel">
           <div className="section-heading centered">
-            <Title level={3}>正在安装系统</Title>
+            <Title level={4}>正在安装系统</Title>
             <Paragraph type="secondary">请保持当前页面打开，不要重复提交或关闭浏览器。</Paragraph>
           </div>
           <Progress percent={progress} status={installError ? 'exception' : progress === 100 ? 'success' : 'active'} />
           <List
             className="phase-list"
             size="small"
+            bordered
             dataSource={phases}
             renderItem={(item) => (
               <List.Item extra={<Tag color={phaseTagColor(item.status)}>{phaseStatusText(item.status)}</Tag>}>
@@ -638,7 +705,6 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
       if (installError || !finalResult) {
         return (
           <Result
-            className="installer-result"
             status="error"
             title="安装失败"
             subTitle={installError || '未能取得安装结果，请检查系统日志后重试。'}
@@ -658,9 +724,8 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
 
       return (
         <Result
-          className="installer-result"
           status="success"
-          title="皓量云擎业务管理系统安装成功"
+          title="安装成功"
           subTitle="请立即保存管理员信息，离开本页后将无法再次查看明文密码。"
           extra={[
             <Button key="home" href={finalResult.home_url}>访问首页</Button>,
@@ -668,20 +733,17 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
             <Button key="copy" onClick={copyAll}>复制全部</Button>,
           ]}
         >
-          <Card className="result-card" bordered={false}>
-            <Descriptions
-              column={1}
-              bordered
-              items={[
-                { key: 'home', label: '首页地址', children: copyableValue(finalResult.home_url, '首页地址') },
-                { key: 'admin', label: '后台地址', children: copyableValue(finalResult.admin_url, '后台地址') },
-                { key: 'path', label: '后台路径', children: copyableValue(`/${finalResult.admin_path}`, '后台路径') },
-                { key: 'nickname', label: '管理员昵称', children: copyableValue(finalResult.admin_nickname, '管理员昵称') },
-                { key: 'username', label: '管理员账号', children: copyableValue(finalResult.admin_username, '管理员账号') },
-                { key: 'password', label: '管理员密码', children: copyableValue(finalResult.admin_password, '管理员密码', true) },
-              ]}
-            />
-          </Card>
+          <Descriptions
+            size="small"
+            bordered
+            column={{ xs: 1, sm: 2 }}
+            items={[
+              { key: 'home', label: '首页地址', children: copyableValue(finalResult.home_url) },
+              { key: 'admin', label: '后台地址', children: copyableValue(finalResult.admin_url) },
+              { key: 'username', label: '管理员账号', children: copyableValue(finalResult.admin_username) },
+              { key: 'password', label: '管理员密码', children: copyableValue(finalResult.admin_password, true) },
+            ]}
+          />
         </Result>
       )
     }
@@ -705,57 +767,86 @@ export function createInstallerApp(antd: typeof import('antd'), locale?: Locale)
 
     return (
       <div className="installer-shell">
-        <header className="installer-header">
-          <div className="brand-mark" aria-hidden="true">皓</div>
-          <div>
-            <Text strong className="brand-name">皓量云擎业务管理系统</Text>
-            <Text type="secondary" className="brand-subtitle">在线安装向导</Text>
+        <header className="installer-topbar">
+          <div className="installer-topbar-inner">
+            <div className="installer-topbar-brand">
+              <img className="topbar-logo" src={logoUrl} alt="皓量云擎" draggable={false} />
+              <div className="topbar-brand-copy">
+                <span className="topbar-brand-name">皓量云擎</span>
+                <span className="topbar-brand-subtitle">业务管理系统</span>
+              </div>
+            </div>
+            <span className="topbar-slogan">让数据驱动业务 · 让管理更高效</span>
           </div>
-          <Tag color="blue">v0.1.0</Tag>
         </header>
 
         <main className="installer-main">
-          <Card className="installer-card" bordered={false}>
-            <div className="installer-steps-scroll" ref={stepsScrollRef}>
-              <Steps current={current} items={stepItems} responsive={false} size="small" className="installer-steps" />
-            </div>
-            <Divider className="steps-divider" />
-            <Form
-              form={form}
-              layout="vertical"
-              autoComplete="off"
-              requiredMark="optional"
-              onValuesChange={(changedValues) => {
-                if ('mysql' in changedValues || 'redis' in changedValues) setConnectionResult(null)
-              }}
-            >
-              {renderCurrentStep()}
-            </Form>
+          <Card
+            className="installer-card"
+            bordered={false}
+            styles={{ body: { padding: 0 } }}
+          >
+            <div className="installer-layout">
+              <aside className="installer-aside">
+                <div>
+                  <div className="aside-brand-name">皓量云擎</div>
+                  <div className="aside-brand-subtitle">业务管理系统</div>
+                  <div className="aside-divider" />
+                  <div className="aside-slogan">简单 · 高效 · 安全 · 可持续</div>
+                </div>
+                <div className="aside-version">v0.1.0</div>
+              </aside>
 
-            {current < 4 && (
-              <div className="step-actions">
-                <Button disabled={current === 0} onClick={() => setCurrent((value) => Math.max(0, value - 1))}>
-                  上一步
-                </Button>
-                <Button
-                  type="primary"
-                  onClick={() => void next()}
-                  disabled={
-                    (current === 0 && !agreementAgreed)
-                    || (current === 1 && !bootstrap.environment.passed)
-                    || (current === 2 && !connectionResult)
-                  }
-                  loading={testing}
+              <section className="installer-content">
+                <div className="installer-steps-wrap">
+                  <Steps
+                    current={current}
+                    items={stepItems}
+                    responsive={false}
+                    size="small"
+                    labelPlacement={screens.lg ? 'horizontal' : 'vertical'}
+                    className="installer-steps"
+                  />
+                </div>
+                <Divider className="steps-divider" />
+                <Form
+                  form={form}
+                  layout="vertical"
+                  autoComplete="off"
+                  requiredMark="optional"
+                  onValuesChange={(changedValues) => {
+                    if ('mysql' in changedValues || 'redis' in changedValues) setConnectionResult(null)
+                  }}
                 >
-                  {current === 3 ? '开始安装' : '下一步'}
-                </Button>
-              </div>
-            )}
+                  {renderCurrentStep()}
+                </Form>
+
+                {current < 4 && (
+                  <div className="step-actions">
+                    <Button disabled={current === 0} onClick={() => setCurrent((value) => Math.max(0, value - 1))}>
+                      上一步
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => void next()}
+                      disabled={
+                        (current === 0 && !agreementAgreed)
+                        || (current === 1 && !bootstrap.environment.passed)
+                        || (current === 2 && !connectionResult)
+                      }
+                      loading={testing}
+                    >
+                      {current === 3 ? '开始安装' : '下一步'}
+                    </Button>
+                  </div>
+                )}
+              </section>
+            </div>
           </Card>
         </main>
 
         <footer className="installer-footer">
-          <Text type="secondary">© {new Date().getFullYear()} 皓量云擎 · 基于 AGPL-3.0 开源</Text>
+          <Text type="secondary">© 2026 宁波皓量云擎网络科技有限公司</Text>
         </footer>
       </div>
     )

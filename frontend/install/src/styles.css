@@ -8,7 +8,7 @@
   --install-surface: #ffffff;
   --install-border: #e8ebf0;
   --install-text-secondary: #667085;
-  --install-shadow: 0 12px 36px rgb(15 23 42 / 8%);
+  --install-radius: 2px;
 }
 
 * {
@@ -25,9 +25,7 @@ body,
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 20% 0%, rgb(22 93 255 / 10%), transparent 34%),
-    var(--install-bg);
+  background: var(--install-bg);
 }
 
 button,
@@ -42,76 +40,136 @@ textarea {
   flex-direction: column;
 }
 
-.installer-header {
+.installer-topbar {
+  width: 100%;
+  background: var(--install-primary);
+}
+
+.installer-topbar-inner {
   display: flex;
-  width: min(1080px, calc(100% - 40px));
-  min-height: 60px;
+  width: min(1600px, calc(100% - 48px));
+  min-height: 72px;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 24px;
   margin: 0 auto;
 }
 
-.installer-header > div:nth-child(2) {
+.installer-topbar-brand {
   display: flex;
   min-width: 0;
-  flex: 1;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-brand-copy {
+  display: flex;
   flex-direction: column;
 }
 
-.brand-mark {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  flex: 0 0 32px;
-  color: var(--install-surface);
-  font-size: 16px;
-  font-weight: 700;
-  background: var(--install-primary);
-  border-radius: 2px;
-  place-items: center;
-  box-shadow: 0 6px 18px rgb(22 93 255 / 24%);
+.topbar-logo {
+  display: block;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  object-fit: contain;
 }
 
-.brand-name {
+.topbar-brand-name {
   overflow: hidden;
-  font-size: 16px;
-  line-height: 22px;
+  color: var(--install-surface);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.brand-subtitle {
+.topbar-brand-subtitle {
+  color: rgb(255 255 255 / 78%);
   font-size: 12px;
+  letter-spacing: 4px;
+}
+
+.topbar-slogan {
+  color: rgb(255 255 255 / 82%);
+  font-size: 13px;
+  letter-spacing: 4px;
+  white-space: nowrap;
 }
 
 .installer-main {
-  display: flex;
-  width: min(1080px, calc(100% - 40px));
+  width: min(1600px, calc(100% - 48px));
   flex: 1;
-  align-items: flex-start;
-  margin: 4px auto 16px;
+  margin: 16px auto;
 }
 
 .installer-card {
   width: 100%;
   overflow: hidden;
   background: var(--install-surface);
-  border-radius: 2px;
-  box-shadow: var(--install-shadow);
+  border: 1px solid var(--install-border);
+  border-radius: var(--install-radius);
 }
 
-.installer-card > .ant-card-body {
+.installer-layout {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+}
+
+.installer-aside {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 28px 28px;
+  background: #f7faff;
+  border-right: 1px solid var(--install-border);
+}
+
+.aside-brand-name {
+  color: #102a56;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.aside-brand-subtitle {
+  margin-top: 4px;
+  color: var(--install-text-secondary);
+  font-size: 14px;
+  letter-spacing: 6px;
+}
+
+.aside-divider {
+  width: 24px;
+  height: 1px;
+  margin: 24px 0;
+  background: #c7d7f5;
+}
+
+.aside-slogan,
+.aside-version {
+  color: var(--install-text-secondary);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.installer-content {
+  min-width: 0;
   padding: 20px 28px 16px;
 }
 
-.installer-steps-scroll {
+.installer-steps-wrap {
   width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
 }
 
 .installer-steps {
   width: 100%;
+}
+
+.step-title-short {
+  display: none;
 }
 
 .steps-divider {
@@ -119,7 +177,6 @@ textarea {
 }
 
 .step-panel {
-  min-height: 340px;
   padding: 2px 0 16px;
 }
 
@@ -127,16 +184,13 @@ textarea {
   margin-bottom: 16px;
 }
 
-.section-heading h3,
-.section-heading p,
-.form-section h5 {
+.section-heading h4,
+.section-heading p {
   margin-top: 0;
 }
 
-.section-heading h3 {
+.section-heading h4 {
   margin-bottom: 4px;
-  font-size: 20px;
-  line-height: 28px;
 }
 
 .section-heading p {
@@ -155,18 +209,19 @@ textarea {
 }
 
 .agreement-content {
-  height: 260px;
+  height: clamp(360px, 46vh, 480px);
   overflow: auto;
   padding: 14px 18px;
   background: #fafbfc;
   border: 1px solid var(--install-border);
-  border-radius: 2px;
+  border-radius: var(--install-radius);
   outline: none;
 }
 
 .agreement-content:focus {
   border-color: var(--install-primary);
-  box-shadow: 0 0 0 2px rgb(22 93 255 / 10%);
+  outline: 1px solid var(--install-primary);
+  outline-offset: 1px;
 }
 
 .agreement-content pre {
@@ -182,83 +237,38 @@ textarea {
   margin: 14px 0 0;
 }
 
-.environment-list,
+.environment-table,
 .phase-list {
   margin-top: 14px;
-  border: 1px solid var(--install-border);
-  border-radius: 2px;
 }
 
-.environment-list .ant-list-item,
-.phase-list .ant-list-item {
-  padding: 10px 16px;
+.environment-current-mobile {
+  display: none;
 }
 
-.environment-item {
-  display: grid;
-  width: 100%;
-  align-items: center;
-  gap: 16px;
-  grid-template-columns: minmax(0, 1fr) auto;
-}
-
-.environment-copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.environment-status {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  text-align: right;
-}
-
-.environment-status .ant-tag {
-  min-width: 54px;
-  margin-inline-end: 0;
-  text-align: center;
-}
-
-.form-section {
-  padding: 14px 18px 0;
-  background: #fafbfc;
-  border: 1px solid var(--install-border);
-  border-radius: 2px;
+.environment-summary {
+  margin-top: 14px;
 }
 
 .form-section-grid {
   display: grid;
-  align-items: start;
-  gap: 14px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+}
+
+.form-section-card {
+  min-width: 0;
+}
+
+.database-card-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .connection-actions {
   margin-top: 14px;
-}
-
-.form-section h5 {
-  margin-bottom: 12px;
-}
-
-.step-panel > .ant-divider {
-  margin: 14px 0;
-}
-
-.installer-card .ant-form-item {
-  margin-bottom: 16px;
-}
-
-.installer-card .ant-form-item-label {
-  padding-bottom: 4px;
-}
-
-.installer-card .ant-alert {
-  padding: 10px 12px;
 }
 
 .full-width {
@@ -275,19 +285,13 @@ textarea {
   margin-top: 16px;
 }
 
-.result-card {
-  width: min(760px, 100%);
-  margin: 0 auto;
-  box-shadow: none;
-}
-
-.result-card .ant-card-body {
-  padding: 0;
-}
-
 .secret-value {
   color: #cf1322;
   font-weight: 600;
+}
+
+.result-value {
+  overflow-wrap: anywhere;
 }
 
 .step-actions {
@@ -312,61 +316,44 @@ textarea {
   gap: 20px;
 }
 
-.fatal-error {
-  width: min(560px, calc(100% - 40px));
-  margin: 15vh auto;
-  padding: 24px;
-  background: #fff;
-  border-radius: 2px;
-  box-shadow: var(--install-shadow);
-}
-
-.installer-result {
-  padding: 16px 12px 8px;
-}
-
-.installer-result .ant-result-icon {
-  margin-bottom: 12px;
-}
-
-.installer-result .ant-result-title {
-  font-size: 20px;
-  line-height: 28px;
-}
-
-.installer-result .ant-result-subtitle {
-  margin-top: 4px;
-}
-
-.installer-result .ant-result-extra {
-  margin-top: 16px;
-}
-
-.installer-result .ant-result-content {
-  margin-top: 16px;
-  padding: 16px;
-}
-
 @media (max-width: 768px) {
-  .installer-header,
+  .installer-topbar-inner,
   .installer-main {
-    width: min(100% - 20px, 1080px);
+    width: calc(100% - 20px);
   }
 
-  .installer-header {
-    min-height: 56px;
+  .installer-topbar-inner {
+    min-height: 60px;
   }
 
   .installer-main {
-    margin-top: 0;
+    margin-top: 10px;
   }
 
-  .installer-card > .ant-card-body {
+  .topbar-logo {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .topbar-brand-name {
+    font-size: 16px;
+  }
+
+  .topbar-slogan {
+    display: none;
+  }
+
+  .installer-content {
     padding: 14px 12px 12px;
   }
 
-  .installer-steps {
-    min-width: 600px;
+  .step-title-full {
+    display: none;
+  }
+
+  .step-title-short {
+    display: inline;
   }
 
   .step-panel {
@@ -375,43 +362,30 @@ textarea {
   }
 
   .agreement-content {
-    height: 240px;
+    height: 320px;
     padding: 12px;
-  }
-
-  .form-section {
-    padding: 12px 12px 0;
   }
 
   .form-section-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .environment-item {
-    align-items: flex-start;
-    gap: 10px;
+}
+
+@media (max-width: 960px) {
+  .installer-layout {
+    min-height: 0;
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .environment-status {
-    justify-content: flex-start;
-    text-align: left;
+  .installer-aside {
+    display: none;
   }
+}
 
-  .step-actions {
-    position: sticky;
-    bottom: 0;
-    margin: 0 -12px -12px;
-    padding: 10px 12px;
-    background: rgb(255 255 255 / 96%);
-    z-index: 2;
-  }
-
-  .installer-result {
-    padding-inline: 0;
-  }
-
-  .installer-result .ant-result-content {
-    padding: 12px;
+@media (max-width: 575px) {
+  .environment-current-mobile {
+    display: block;
+    margin-top: 2px;
   }
 }
