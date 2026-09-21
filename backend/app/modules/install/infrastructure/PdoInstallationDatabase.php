@@ -7,73 +7,54 @@ namespace app\modules\install\infrastructure;
 use app\modules\install\contract\InstallationDatabaseInterface;
 use app\modules\install\domain\InstallationConfiguration;
 use app\modules\install\exception\InstallationException;
+use app\modules\system_update\contract\CoreMigrationRunnerInterface;
+use app\modules\system_update\contract\SystemMigrationLockInterface;
+use app\modules\system_update\domain\MigrationDatabaseConfiguration;
 use PDO;
 use Throwable;
 
 /**
- * 使用 PDO 创建安装表结构并写入系统初始数据。
+ * 使用核心数据库迁移和 PDO 完成系统初始数据写入。
  */
 final readonly class PdoInstallationDatabase implements InstallationDatabaseInterface
 {
     /**
      * 初始化安装数据库服务。
-     * @param PdoConnectionFactory $connections 数据库连接工厂
+     * @param PdoConnectionFactory         $connections   数据库连接工厂
+     * @param CoreMigrationRunnerInterface $migrations    核心数据库迁移执行器
+     * @param SystemMigrationLockInterface $migrationLock 系统数据库迁移锁
      */
-    public function __construct(private PdoConnectionFactory $connections)
-    {
+    public function __construct(
+        private PdoConnectionFactory $connections,
+        private CoreMigrationRunnerInterface $migrations,
+        private SystemMigrationLockInterface $migrationLock,
+    ) {
     }
 
     /**
-     * 幂等创建安装所需的基础表结构。
+     * 执行所有尚未应用的核心数据库迁移。
      * @param InstallationConfiguration $configuration 已校验的安装配置
      * @return void
-     * @throws InstallationException 数据库连接或建表失败时抛出
-     * @throws \PDOException 执行建表语句失败时抛出
+     * @throws InstallationException 数据库连接或迁移执行失败时抛出
      */
     public function createSchema(InstallationConfiguration $configuration): void
     {
-        $pdo = $this->connections->mysql($configuration->database);
-        $prefix = $configuration->database->tablePrefix;
-
-        $pdo->exec(
-            "CREATE TABLE IF NOT EXISTS `{$prefix}system_settings` (
-                `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `setting_key` VARCHAR(100) NOT NULL,
-                `setting_value` TEXT NOT NULL,
-                `is_public` TINYINT(1) NOT NULL DEFAULT 0,
-                `created_at` DATETIME NOT NULL,
-                `updated_at` DATETIME NOT NULL,
-                PRIMARY KEY (`id`),
-                UNIQUE KEY `uk_setting_key` (`setting_key`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-        );
-
-        $pdo->exec(
-            "CREATE TABLE IF NOT EXISTS `{$prefix}admin_users` (
-                `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `username` VARCHAR(32) NOT NULL,
-                `nickname` VARCHAR(32) NOT NULL,
-                `password_hash` VARCHAR(255) NOT NULL,
-                `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-                `last_login_at` DATETIME NULL,
-                `created_at` DATETIME NOT NULL,
-                `updated_at` DATETIME NOT NULL,
-                PRIMARY KEY (`id`),
-                UNIQUE KEY `uk_username` (`username`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-        );
-
-        $pdo->exec(
-            "CREATE TABLE IF NOT EXISTS `{$prefix}installation` (
-                `id` TINYINT UNSIGNED NOT NULL,
-                `version` VARCHAR(32) NOT NULL,
-                `admin_path` VARCHAR(32) NOT NULL,
-                `agreement_version` VARCHAR(32) NOT NULL,
-                `agreement_accepted_at` DATETIME NOT NULL,
-                `installed_at` DATETIME NOT NULL,
-                PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-        );
+        try {
+            $migrationConfiguration = new MigrationDatabaseConfiguration(
+                'mysql',
+                $configuration->database->mysqlDatabase,
+                $configuration->database->tablePrefix,
+                $configuration->database->mysqlHost,
+                $configuration->database->mysqlPort,
+                $configuration->database->mysqlUsername,
+                $configuration->database->mysqlPassword,
+            );
+            $this->migrationLock->synchronized(
+                fn () => $this->migrations->migrate($migrationConfiguration),
+            );
+        } catch (Throwable $exception) {
+            throw new InstallationException('初始化数据表结构失败，请检查数据库权限后重试', 500, $exception);
+        }
     }
 
     /**
@@ -151,7 +132,7 @@ final readonly class PdoInstallationDatabase implements InstallationDatabaseInte
                     `installed_at` = VALUES(`installed_at`)",
             );
             $installStatement->execute([
-                'version' => '0.1.0',
+                'version' => (string) config('version.current', '0.1.0'),
                 'admin_path' => $configuration->adminPath,
                 'agreement_version' => InstallationConfiguration::AGREEMENT_VERSION,
                 'agreement_accepted_at' => $now,

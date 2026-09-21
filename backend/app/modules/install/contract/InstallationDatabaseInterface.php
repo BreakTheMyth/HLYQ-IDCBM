@@ -13,10 +13,10 @@ use app\modules\install\exception\InstallationException;
 interface InstallationDatabaseInterface
 {
     /**
-     * 创建可重复执行的基础表结构。
+     * 执行可重复调用的核心数据库迁移。
      * @param InstallationConfiguration $configuration 已校验的安装配置
      * @return void
-     * @throws InstallationException 数据库连接或建表失败时抛出
+     * @throws InstallationException 数据库连接或迁移执行失败时抛出
      */
     public function createSchema(InstallationConfiguration $configuration): void;
 

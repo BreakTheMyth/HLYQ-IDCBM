@@ -182,7 +182,7 @@ final class FileInstallationStateRepository implements InstallationStateReposito
 
             $installedAt = date(DATE_ATOM);
             $this->writeJson($this->installRuntimePath() . '/installed.json', [
-                'version' => '0.1.0',
+                'version' => (string) config('version.current', '0.1.0'),
                 'site_name' => $configuration->siteName,
                 'admin_path' => $configuration->adminPath,
                 'admin_username' => $configuration->adminUsername,

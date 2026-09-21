@@ -35,7 +35,7 @@ cp .env.example .env
 php start.php start
 ```
 
-后端新增业务接口前请先阅读 [后端路由开发规范](docs/development/backend-routing.md)。
+后端新增业务接口前请先阅读 [后端路由开发规范](docs/development/backend-routing.md)。涉及数据表结构或系统版本更新时，遵循 [数据库迁移与系统版本更新规范](docs/development/database-migrations.md)。
 
 ### 运营后台
 

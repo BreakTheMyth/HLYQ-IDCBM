@@ -18,6 +18,12 @@ use app\modules\install\infrastructure\EnvironmentInspector;
 use app\modules\install\infrastructure\FileInstallationStateRepository;
 use app\modules\install\infrastructure\PdoInstallationDatabase;
 use app\modules\install\infrastructure\WorkermanRuntimeReloader;
+use app\modules\system_update\contract\CoreMigrationRunnerInterface;
+use app\modules\system_update\contract\SystemMigrationLockInterface;
+use app\modules\system_update\contract\SystemUpdateRepositoryInterface;
+use app\modules\system_update\infrastructure\FileSystemMigrationLock;
+use app\modules\system_update\infrastructure\PdoSystemUpdateRepository;
+use app\modules\system_update\infrastructure\PhinxCoreMigrationRunner;
 use support\Log;
 
 /**
@@ -51,4 +57,7 @@ return [
     InstallationDatabaseInterface::class => DI\autowire(PdoInstallationDatabase::class),
     InstallationStateRepositoryInterface::class => DI\autowire(FileInstallationStateRepository::class),
     RuntimeReloaderInterface::class => DI\autowire(WorkermanRuntimeReloader::class),
+    CoreMigrationRunnerInterface::class => DI\autowire(PhinxCoreMigrationRunner::class),
+    SystemMigrationLockInterface::class => DI\autowire(FileSystemMigrationLock::class),
+    SystemUpdateRepositoryInterface::class => DI\autowire(PdoSystemUpdateRepository::class),
 ];
