@@ -53,13 +53,6 @@ export interface AdminTopNavigationItem {
   sections: AdminNavigationSection[]
 }
 
-/** 路由对应的菜单选中信息。 */
-export interface AdminNavigationSelection {
-  topMenuKey: string
-  sideMenuKey: string
-  parentMenuKey: string | null
-}
-
 /** 后台业务页面路由定义。 */
 export interface AdminPageRoute {
   key: string
@@ -293,54 +286,4 @@ export function createProLayoutMenuData(): MenuDataItem[] {
 export function getFirstNavigationPath(sections: AdminNavigationSection[]): string {
   const firstItem = sections[0]?.items[0]
   return firstItem?.children?.[0]?.path ?? firstItem?.path ?? '/dashboard'
-}
-
-/**
- * 根据当前路由定位导航选中状态。
- * @param pathname 当前相对后台根路径的路由
- * @returns 匹配到的一级、二级或三级菜单信息
- */
-export function findNavigationSelection(pathname: string): AdminNavigationSelection {
-  for (const topMenu of adminNavigation) {
-    for (const section of topMenu.sections) {
-      for (const item of section.items) {
-        if (item.path === pathname) {
-          return { topMenuKey: topMenu.key, sideMenuKey: item.key, parentMenuKey: null }
-        }
-
-        const child = item.children?.find((candidate) => candidate.path === pathname)
-        if (child) {
-          return { topMenuKey: topMenu.key, sideMenuKey: child.key, parentMenuKey: item.key }
-        }
-      }
-    }
-  }
-
-  return { topMenuKey: adminNavigation[0].key, sideMenuKey: adminNavigation[0].sections[0].items[0].key, parentMenuKey: null }
-}
-
-/**
- * 根据菜单标识查找目标页面路径。
- * @param topMenuKey 一级菜单标识
- * @param sideMenuKey 二级或三级菜单标识
- * @returns 匹配到的页面路径，未匹配时返回默认工作台路径
- */
-export function findNavigationPath(topMenuKey: string, sideMenuKey: string): string {
-  const topMenu = adminNavigation.find((menu) => menu.key === topMenuKey)
-  if (!topMenu) {
-    return '/dashboard'
-  }
-
-  for (const item of topMenu.sections.flatMap((section) => section.items)) {
-    if (item.key === sideMenuKey && item.path) {
-      return item.path
-    }
-
-    const child = item.children?.find((candidate) => candidate.key === sideMenuKey)
-    if (child) {
-      return child.path
-    }
-  }
-
-  return getFirstNavigationPath(topMenu.sections)
 }

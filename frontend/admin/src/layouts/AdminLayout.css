@@ -1,13 +1,7 @@
-.admin-pro-layout {
-  min-height: 100vh;
-  font-family: var(--font-family);
-  background: var(--nav-color-bg-canvas);
-}
-
 .admin-brand-logo {
   display: block;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
 }
 
@@ -27,73 +21,4 @@
 .admin-user-arrow {
   color: var(--color-text-tertiary);
   font-size: 10px;
-}
-
-.admin-context-bar {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0 var(--nav-space-4);
-  background: var(--color-bg-container);
-  border-bottom: 1px solid var(--color-border-secondary);
-}
-
-.admin-page-container {
-  min-width: 0;
-  padding: var(--nav-space-4);
-}
-
-.admin-dual-menu {
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  width: 100%;
-  min-height: 100%;
-}
-
-.admin-dual-primary {
-  min-width: 0;
-  padding-top: var(--nav-space-2);
-  border-right: 1px solid var(--color-border-secondary);
-}
-
-.admin-dual-secondary {
-  min-width: 0;
-  padding-top: var(--nav-space-2);
-}
-
-.admin-dual-heading {
-  height: 40px;
-  padding: 0 var(--nav-space-4);
-  overflow: hidden;
-  color: var(--color-text);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-secondary);
-  line-height: 40px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.admin-dual-menu.collapsed {
-  grid-template-columns: 64px;
-}
-
-.admin-dual-menu.collapsed .admin-dual-secondary {
-  display: none;
-}
-
-@media (min-width: 1600px) {
-  .admin-page-container {
-    padding: var(--nav-space-5);
-  }
-}
-
-@media (max-width: 768px) {
-  .admin-brand-logo {
-    width: 32px;
-    height: 32px;
-  }
-
-  .admin-page-container {
-    padding: var(--nav-space-3);
-  }
 }
