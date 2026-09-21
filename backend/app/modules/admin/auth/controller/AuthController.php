@@ -61,7 +61,7 @@ final readonly class AuthController
         return $this->withNoStore($response)->cookie(
             $this->cookieName(),
             $result->token->value,
-            null,
+            $credentials->remember ? max(1, $result->token->expiresAt - time()) : null,
             '/',
             '',
             $this->secureCookie(),

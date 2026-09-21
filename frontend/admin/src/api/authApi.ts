@@ -19,6 +19,8 @@ export interface AdminLoginInput {
   username: string
   /** 管理员密码。 */
   password: string
+  /** 是否在浏览器关闭后继续保留登录状态。 */
+  remember?: boolean
 }
 
 interface LoginResponse {

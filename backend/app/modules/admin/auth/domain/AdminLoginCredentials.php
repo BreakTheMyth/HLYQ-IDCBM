@@ -15,10 +15,12 @@ final readonly class AdminLoginCredentials
      * 创建管理员登录凭据。
      * @param string $username 管理员账号
      * @param string $password 管理员密码
+     * @param bool   $remember 是否在浏览器关闭后继续保留登录状态
      */
     private function __construct(
         public string $username,
         public string $password,
+        public bool $remember,
     ) {
     }
 
@@ -32,6 +34,7 @@ final readonly class AdminLoginCredentials
     {
         $username = trim((string) ($input['username'] ?? ''));
         $password = (string) ($input['password'] ?? '');
+        $remember = $input['remember'] ?? false;
         $errors = [];
 
         if ($username === '') {
@@ -46,10 +49,14 @@ final readonly class AdminLoginCredentials
             $errors['password'][] = '管理员密码不能超过 128 个字符';
         }
 
+        if (!is_bool($remember)) {
+            $errors['remember'][] = '记住我选项必须为布尔值';
+        }
+
         if ($errors !== []) {
             throw AdminAuthenticationException::validationFailed($errors);
         }
 
-        return new self($username, $password);
+        return new self($username, $password, $remember);
     }
 }

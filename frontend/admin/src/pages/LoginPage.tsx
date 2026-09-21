@@ -1,9 +1,10 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { LoginForm, ProConfigProvider, ProFormText } from '@ant-design/pro-components'
-import { Alert, Typography, theme } from 'antd'
+import { LoginForm, ProConfigProvider, ProFormCheckbox, ProFormText } from '@ant-design/pro-components'
+import { Alert, App as AntApp, Flex, Typography, theme } from 'antd'
 import { useState } from 'react'
 import type { AdminLoginInput } from '../api/authApi.ts'
 import { useAdminAuth } from '../auth/AuthContext.ts'
+import { passwordHelpUrl } from '../config/helpLinks.ts'
 import './LoginPage.css'
 
 const logoUrl = `${import.meta.env.BASE_URL}logo.png`
@@ -14,6 +15,7 @@ const logoUrl = `${import.meta.env.BASE_URL}logo.png`
  */
 function LoginPage() {
   const { login, bootstrapError } = useAdminAuth()
+  const { message } = AntApp.useApp()
   const { token } = theme.useToken()
   const [errorMessage, setErrorMessage] = useState(bootstrapError)
 
@@ -47,6 +49,7 @@ function LoginPage() {
             title="皓量云擎"
             subTitle="业务管理系统运营后台"
             onFinish={handleLogin}
+            initialValues={{ remember: false }}
             submitter={{ searchConfig: { submitText: '登录' } }}
             containerStyle={{
               height: 'auto',
@@ -85,6 +88,24 @@ function LoginPage() {
                 { max: 128, message: '管理员密码不能超过 128 个字符' },
               ]}
             />
+            <Flex className="admin-login-options" align="center" justify="space-between">
+              <ProFormCheckbox name="remember" noStyle>
+                记住我
+              </ProFormCheckbox>
+              <Typography.Link
+                href={passwordHelpUrl || undefined}
+                target={passwordHelpUrl ? '_blank' : undefined}
+                rel={passwordHelpUrl ? 'noopener noreferrer' : undefined}
+                onClick={passwordHelpUrl
+                  ? undefined
+                  : (event) => {
+                      event.preventDefault()
+                      void message.info('密码找回帮助文档正在准备中')
+                    }}
+              >
+                忘记密码
+              </Typography.Link>
+            </Flex>
           </LoginForm>
         </ProConfigProvider>
       </section>
