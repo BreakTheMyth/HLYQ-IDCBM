@@ -316,27 +316,6 @@ body,
   flex-shrink: 0;
 }
 
-/* ProLayout / PageContainer 默认 pageContainer padding(40/32) 与本规范 24px 冲突，统一清零 */
-.ant-pro-layout-content,
-.ant-pro-page-container-children-container,
-.ant-pro-page-container-children-container-no-header,
-.ant-pro-page-container-warp-page-header,
-.ant-pro-page-container .ant-page-header {
-  padding-inline: 0 !important;
-}
-
-.ant-pro-layout-content,
-.ant-pro-page-container-children-container,
-.ant-pro-page-container-children-container-no-header {
-  padding-block: 0 !important;
-}
-
-.ant-pro-page-container-warp-page-header,
-.ant-pro-page-container .ant-page-header {
-  padding-block-start: 0 !important;
-  padding-block-end: 0 !important;
-}
-
 /* 页面级单行说明提示条（layout.md §页面说明提示条） */
 .ds-page-inline-alert.ant-alert {
   padding: 8px 12px;

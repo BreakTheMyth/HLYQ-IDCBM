@@ -1,20 +1,26 @@
 .app-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  align-content: start;
   min-height: calc(100vh - var(--nav-header-height) - var(--nav-space-4) * 2);
+  padding: var(--nav-space-4);
   animation: app-loading-fade-in 160ms ease-out both;
   gap: var(--nav-space-3);
 }
 
 .app-loading-fullscreen {
   min-height: 100vh;
+  padding: var(--nav-space-6);
   background: var(--app-page-background);
 }
 
+.app-loading-skeleton {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
 .app-loading-message.ant-typography {
-  margin: 0;
+  margin: 0 auto;
 }
 
 @keyframes app-loading-fade-in {

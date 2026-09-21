@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { MenuDataItem } from '@ant-design/pro-components'
 import {
   ApiOutlined,
   AppstoreAddOutlined,
@@ -196,7 +197,7 @@ export const adminNavigation: AdminTopNavigationItem[] = [
     ],
   },
   {
-    key: 'applications',
+    key: 'application-center',
     label: '应用',
     icon: <AppstoreAddOutlined />,
     sections: [
@@ -259,6 +260,30 @@ export const adminPageRoutes: AdminPageRoute[] = adminNavigation.flatMap((topMen
     }),
   ),
 )
+
+/**
+ * 将后台导航配置转换为 ProLayout 菜单数据。
+ * @returns ProLayout 可直接消费的分层菜单数据
+ */
+export function createProLayoutMenuData(): MenuDataItem[] {
+  return adminNavigation.map((topMenu) => ({
+    key: topMenu.key,
+    path: getFirstNavigationPath(topMenu.sections),
+    name: topMenu.label,
+    icon: topMenu.icon,
+    children: topMenu.sections.flatMap((section) => section.items.map((item) => ({
+      key: item.key,
+      path: item.path ?? item.children?.[0]?.path,
+      name: item.label,
+      icon: item.icon,
+      children: item.children?.map((child) => ({
+        key: child.key,
+        path: child.path,
+        name: child.label,
+      })),
+    }))),
+  }))
+}
 
 /**
  * 获取一级菜单对应的默认页面路径。

@@ -4,34 +4,15 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 32px 24px 64px;
-  overflow: hidden;
+  padding: var(--nav-space-6);
 }
 
 .admin-login-panel {
-  position: relative;
-  z-index: 1;
   width: min(420px, 100%);
   padding: 0;
   overflow: hidden;
   border: 1px solid;
-  border-radius: 2px;
-}
-
-.admin-login-panel .ant-pro-form-login-container {
-  width: 100%;
-  max-width: none;
-  padding: 36px 40px 32px;
-}
-
-.admin-login-panel .ant-pro-form-login-header {
-  margin-bottom: 8px;
-}
-
-.admin-login-panel .ant-pro-form-login-logo {
-  width: 52px;
-  height: 52px;
-  margin-inline-end: 12px;
+  border-radius: var(--border-radius-lg);
 }
 
 .admin-login-logo {
@@ -41,72 +22,23 @@
   object-fit: contain;
 }
 
-.admin-login-panel .ant-pro-form-login-title {
-  font-size: 26px;
-  line-height: 34px;
-}
-
-.admin-login-panel .ant-pro-form-login-desc {
-  margin-bottom: 28px;
-}
-
-.admin-login-panel .ant-form-item {
-  margin-bottom: 20px;
-}
-
-.admin-login-panel .ant-pro-form-login-main {
-  width: 100%;
-  max-width: none;
-}
-
-.admin-login-alert {
-  margin-bottom: 20px;
-}
-
+.admin-login-alert,
 .admin-login-options {
-  margin-bottom: 20px;
-}
-
-.admin-login-decoration {
-  position: absolute;
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(2px);
-}
-
-.admin-login-decoration-primary {
-  top: -220px;
-  right: -120px;
-  background: color-mix(in srgb, var(--app-color-primary) 12%, transparent);
-}
-
-.admin-login-decoration-secondary {
-  bottom: -260px;
-  left: -160px;
-  background: color-mix(in srgb, var(--app-color-primary) 8%, transparent);
+  margin-bottom: var(--nav-space-5);
 }
 
 .admin-login-footer {
   position: absolute;
-  bottom: 24px;
-  z-index: 1;
-  font-size: 12px;
+  bottom: var(--nav-space-6);
+  font-size: var(--font-size-xs);
 }
 
 @media (max-width: 480px) {
   .admin-login-page {
-    align-items: flex-start;
-    padding: 14vh 16px 56px;
+    padding: var(--nav-space-4);
   }
 
-  .admin-login-panel .ant-pro-form-login-container {
-    padding: 28px 24px 24px;
-  }
-
-  .admin-login-panel .ant-pro-form-login-title {
-    font-size: 22px;
-    line-height: 30px;
+  .admin-login-footer {
+    bottom: var(--nav-space-4);
   }
 }

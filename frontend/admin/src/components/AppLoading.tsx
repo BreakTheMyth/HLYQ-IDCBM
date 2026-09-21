@@ -1,4 +1,5 @@
-import { Spin, Typography } from 'antd'
+import { ProSkeleton } from '@ant-design/pro-components'
+import { Typography } from 'antd'
 import './AppLoading.css'
 
 /** 运营后台统一加载状态属性。 */
@@ -22,7 +23,9 @@ function AppLoading({ fullscreen = false, message = '正在加载...' }: AppLoad
       aria-live="polite"
       aria-label={message}
     >
-      <Spin size="large" />
+      <div className="app-loading-skeleton" aria-hidden="true">
+        <ProSkeleton type="list" active />
+      </div>
       <Typography.Text type="secondary" className="app-loading-message">
         {message}
       </Typography.Text>

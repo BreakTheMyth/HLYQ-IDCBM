@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { App as AntdApp, ConfigProvider } from 'antd'
+import { ProConfigProvider } from '@ant-design/pro-components'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAdminAuth } from './auth/AuthContext.ts'
 import { AuthProvider } from './auth/AuthProvider.tsx'
@@ -73,14 +74,16 @@ function App() {
 
   return (
     <ConfigProvider theme={appTheme} renderEmpty={() => <AppEmptyState />}>
-      <AntdApp>
-        <AuthProvider>
-          <AdminApplication
-            themeMode={themeMode}
-            onThemeModeChange={() => setThemeMode((currentMode) => (currentMode === 'light' ? 'dark' : 'light'))}
-          />
-        </AuthProvider>
-      </AntdApp>
+      <ProConfigProvider hashed={false}>
+        <AntdApp>
+          <AuthProvider>
+            <AdminApplication
+              themeMode={themeMode}
+              onThemeModeChange={() => setThemeMode((currentMode) => (currentMode === 'light' ? 'dark' : 'light'))}
+            />
+          </AuthProvider>
+        </AntdApp>
+      </ProConfigProvider>
     </ConfigProvider>
   )
 }
