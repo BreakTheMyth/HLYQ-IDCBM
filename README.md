@@ -4,16 +4,16 @@
 
 ## 技术栈
 
-- 后端：PHP 8.4、Webman、MySQL 8.0、Redis
+- 后端：PHP 8.4、MySQL 8.0、Redis
 - 运营后台：React 19、Vite、Ant Design 6
 - 会员控制台：React 19、Vite、Ant Design 6
-- 官网：Webman 模板引擎，支持主题切换
+- 官网：服务端模板引擎，支持主题切换
 
 ## 目录结构
 
 ```text
-backend/             Webman 后端
-backend/plugin/      Webman 应用插件
+backend/             后端应用
+backend/plugin/      应用插件
 backend/themes/      官网主题
 frontend/admin/      运营后台
 frontend/console/    会员控制台
@@ -35,7 +35,7 @@ cp .env.example .env
 php start.php start
 ```
 
-后端新增业务接口前请先阅读 [Webman 后端路由开发规范](docs/development/backend-routing.md)。
+后端新增业务接口前请先阅读 [后端路由开发规范](docs/development/backend-routing.md)。
 
 ### 运营后台
 
