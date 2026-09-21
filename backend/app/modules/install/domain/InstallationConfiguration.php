@@ -122,10 +122,11 @@ final readonly class InstallationConfiguration
     /**
      * 生成需要写入 .env 的运行配置。
      * @param string $appKey    应用密钥
+     * @param string $jwtSecret JWT 签名密钥
      * @param bool   $installed 是否已经完成安装
      * @return array<string, string|int> 环境变量键值
      */
-    public function environment(string $appKey, bool $installed): array
+    public function environment(string $appKey, string $jwtSecret, bool $installed): array
     {
         return [
             'APP_NAME' => $this->siteName,
@@ -136,6 +137,8 @@ final readonly class InstallationConfiguration
             'APP_URL' => $this->siteUrl,
             'ADMIN_PATH' => $this->adminPath,
             'SESSION_SECURE' => str_starts_with(strtolower($this->siteUrl), 'https://') ? 'true' : 'false',
+            'JWT_SECRET' => $jwtSecret,
+            'JWT_TTL' => 7200,
             'DB_HOST' => $this->database->mysqlHost,
             'DB_PORT' => $this->database->mysqlPort,
             'DB_NAME' => $this->database->mysqlDatabase,

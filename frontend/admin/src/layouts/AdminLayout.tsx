@@ -25,12 +25,15 @@ import {
   type AdminNavigationSection,
   type AdminTopNavigationItem,
 } from '../config/adminNavigation.tsx'
+import type { AdminUser } from '../api/authApi.ts'
 import type { AppThemeMode } from '../theme.ts'
 
 interface AdminLayoutProps {
   children?: ReactNode
+  user: AdminUser
   themeMode: AppThemeMode
   onThemeModeChange: () => void
+  onLogout: () => Promise<void>
 }
 
 const userMenuItems: MenuProps['items'] = [
@@ -68,7 +71,7 @@ function getInitialLayoutMode(): AdminLayoutMode {
  * @param props.children 由业务路由渲染的页面内容
  * @returns 包含经典、混合及双列导航模式的后台布局
  */
-function AdminLayout({ children, themeMode, onThemeModeChange }: AdminLayoutProps) {
+function AdminLayout({ children, user, themeMode, onThemeModeChange, onLogout }: AdminLayoutProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const topNavigationRef = useRef<HTMLElement>(null)
@@ -222,6 +225,12 @@ function AdminLayout({ children, themeMode, onThemeModeChange }: AdminLayoutProp
   const handleLayoutMenuClick: MenuProps['onClick'] = ({ key }) => {
     handleLayoutModeChange(key as AdminLayoutMode)
   }
+
+  const handleUserMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'logout') void onLogout()
+  }
+
+  const avatarText = Array.from(user.nickname.trim() || user.username)[0] ?? '管'
 
   const renderSideSections = (sections: AdminNavigationSection[]) =>
     sections.map((section, sectionIndex) => (
@@ -432,10 +441,14 @@ function AdminLayout({ children, themeMode, onThemeModeChange }: AdminLayoutProp
             </Badge>
           </Tooltip>
 
-          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" trigger={['click']}>
+          <Dropdown
+            menu={{ items: userMenuItems, onClick: handleUserMenuClick }}
+            placement="bottomRight"
+            trigger={['click']}
+          >
             <button type="button" className="user-trigger" aria-label="打开管理员菜单">
-              <Avatar size={32} className="user-avatar">超</Avatar>
-              <span className="user-name">超级管理员</span>
+              <Avatar size={32} className="user-avatar">{avatarText}</Avatar>
+              <span className="user-name">{user.nickname}</span>
               <DownOutlined className="user-arrow" />
             </button>
           </Dropdown>

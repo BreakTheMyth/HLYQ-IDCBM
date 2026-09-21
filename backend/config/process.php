@@ -23,7 +23,7 @@ global $argv;
 return [
     'webman' => [
         'handler' => Http::class,
-        'listen' => getenv('WEBMAN_LISTEN') ?: 'http://0.0.0.0:8787',
+        'listen' => getenv('WEBMAN_LISTEN') ?: 'http://0.0.0.0:8989',
         'count' => max(1, (int) (getenv('WEBMAN_COUNT') ?: cpu_count() * 4)),
         'user' => '',
         'group' => '',

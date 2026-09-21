@@ -37,7 +37,8 @@
     "guzzlehttp/guzzle": "^8.2",
     "zoujingli/ip2region": "^3.0",
     "ramsey/uuid": "^3.9",
-    "workerman/workerman": "~5.1"
+    "workerman/workerman": "~5.1",
+    "firebase/php-jwt": "^7.1"
   },
   "suggest": {
     "ext-event": "For better performance. "

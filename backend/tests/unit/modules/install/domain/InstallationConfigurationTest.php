@@ -28,7 +28,10 @@ final class InstallationConfigurationTest extends TestCase
         self::assertSame($configuration->siteName, $configuration->siteTitle);
         self::assertSame('', $configuration->siteDescription);
         self::assertSame('超级管理员', $configuration->adminNickname);
-        self::assertSame('true', $configuration->environment('app-key', false)['SESSION_SECURE']);
+        $environment = $configuration->environment('app-key', 'jwt-secret', false);
+        self::assertSame('true', $environment['SESSION_SECURE']);
+        self::assertSame('jwt-secret', $environment['JWT_SECRET']);
+        self::assertSame(7200, $environment['JWT_TTL']);
         self::assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $configuration->databaseFingerprint());
         self::assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $configuration->fingerprint());
     }

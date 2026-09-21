@@ -150,12 +150,16 @@ final class FileInstallationStateRepository implements InstallationStateReposito
      * 将尚未标记完成的应用配置写入 .env。
      * @param InstallationConfiguration $configuration 已校验的安装配置
      * @param string                    $appKey        应用密钥
+     * @param string                    $jwtSecret     JWT 签名密钥
      * @return void
      * @throws InstallationException .env 读取或写入失败时抛出
      */
-    public function writeConfiguration(InstallationConfiguration $configuration, string $appKey): void
-    {
-        $this->writeEnvironment($configuration->environment($appKey, false));
+    public function writeConfiguration(
+        InstallationConfiguration $configuration,
+        string $appKey,
+        string $jwtSecret,
+    ): void {
+        $this->writeEnvironment($configuration->environment($appKey, $jwtSecret, false));
     }
 
     /**

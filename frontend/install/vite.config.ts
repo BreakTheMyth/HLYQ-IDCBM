@@ -11,8 +11,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     proxy: {
-      '/api': 'http://127.0.0.1:8787',
-      '/install-assets/vendor': 'http://127.0.0.1:8787',
+      '/api': 'http://127.0.0.1:8989',
+      '/install-assets/vendor': 'http://127.0.0.1:8989',
     },
   },
   preview: {

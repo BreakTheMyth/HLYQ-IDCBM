@@ -164,7 +164,11 @@ final readonly class InstallApplicationService
      */
     private function writeConfiguration(InstallationConfiguration $configuration): array
     {
-        $this->stateRepository->writeConfiguration($configuration, bin2hex(random_bytes(32)));
+        $this->stateRepository->writeConfiguration(
+            $configuration,
+            bin2hex(random_bytes(32)),
+            bin2hex(random_bytes(48)),
+        );
 
         return [
             'progress' => 88,

@@ -53,10 +53,15 @@ interface InstallationStateRepositoryInterface
      * 写入尚未标记完成的运行配置。
      * @param InstallationConfiguration $configuration 已校验的安装配置
      * @param string                    $appKey        应用密钥
+     * @param string                    $jwtSecret     JWT 签名密钥
      * @return void
      * @throws InstallationException 配置文件写入失败时抛出
      */
-    public function writeConfiguration(InstallationConfiguration $configuration, string $appKey): void;
+    public function writeConfiguration(
+        InstallationConfiguration $configuration,
+        string $appKey,
+        string $jwtSecret,
+    ): void;
 
     /**
      * 完成安装并清理活动安装状态。

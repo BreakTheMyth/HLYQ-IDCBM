@@ -9,3 +9,6 @@
 *.woff binary
 *.woff2 binary
 
+# Vite 构建产物可能在压缩后的模板字符串中保留有意义的行尾空格。
+backend/public/app/** whitespace=-trailing-space
+backend/public/install-assets/app/** whitespace=-trailing-space
