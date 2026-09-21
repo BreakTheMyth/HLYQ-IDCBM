@@ -43,12 +43,29 @@
 - Hooks 依赖、缓存失效、竞态处理、权限判断、跨窗口通信和兼容性分支等不直观逻辑，应使用行内注释解释设计原因，不要逐行复述代码或保留大段已注释掉的废弃实现。
 - 注释必须与实现同步更新；公共 API 行为变更时同步更新 TSDoc、示例和弃用说明，过期或误导性注释必须修正或删除。
 
+## ProComponents 组件选型规范
+
+- 运营后台和会员控制台的业务页面默认优先使用 `@ant-design/pro-components` 已封装的组件能力，不重复组合 Ant Design 原子组件实现 ProComponents 已覆盖的查询、表格、表单、详情、列表、卡片和指标场景。
+- 数据展示表格默认使用 `ProTable`，并优先通过 `columns`、`request`、`valueType`、`valueEnum`、`search`、`pagination`、`toolBarRender`、`tableAlertRender` 和 `actionRef` 等公开能力完成查询、展示、分页、批量操作和刷新。仅当表格是无查询、无分页、无工具栏、数据量很小的局部静态展示，或 `ProTable` 明显不适合该交互时，才使用 Ant Design `Table`，并在实现或审查说明中写明原因。
+- 录入和配置页面优先使用 `ProForm` 体系；基础字段使用 `ProFormText`、`ProFormSelect` 等对应组件，复杂筛选优先 `QueryFilter`，多步骤流程优先 `StepsForm`。不得手写状态编排、提交栏和字段联动来重复实现 ProForm 已提供的能力。
+- 只读详情优先使用 `ProDescriptions`，业务列表优先使用 `ProList`，业务内容容器优先使用 `ProCard`，核心指标优先使用 `StatisticCard`；组件选型必须匹配真实业务语义，不得仅为使用 ProComponents 而增加多余容器或嵌套层级。
+- 页面框架在符合现有路由和布局方案时优先复用 `ProLayout`、`PageContainer` 等能力；已有自定义 Layout 能稳定满足需求时不得重复套入第二套页面框架、标题或面包屑。
+- 使用 ProComponents 时必须遵循项目实际安装版本的公开 API 和类型定义，优先配置组件能力，不依赖私有 DOM、内部类名或样式覆盖；缺失能力先评估组合公开 Props、插槽和受控状态，再决定是否封装项目组件。
+- Ant Design 原子组件仍用于按钮、提示、弹窗、抽屉、标签、排版及 ProComponents 内部自定义渲染。在线安装器等强调依赖精简、流程固定的独立应用，以及极轻量的局部静态展示，可以继续使用 Ant Design 原生组件，不得仅为形式统一引入不必要的 ProComponents 依赖。
+
 ## Ant Design 与视觉规范
 
 - 优先使用 Ant Design 6、ProComponents 和项目已有组件，不重复实现已有基础组件。
 - 全局主题色固定为 `#165DFF`，矩形组件全局圆角固定为 `2px`；头像、状态点和其他具有圆形语义的元素可以保持圆形。
 - 主题令牌必须在应用根部通过 `ConfigProvider` 集中配置；业务组件使用 Design Token 或项目 CSS 变量，不散落同义色值和圆角硬编码。
 - 本项目明确的 `2px` 圆角优先于通用组件模板的默认圆角；复制 Skill 模板后必须同步调整 Ant Design Token 和 CSS 变量。
+- Ant Design 和 ProComponents 自带的视觉样式、交互状态与内部结构原则上直接使用，不做重复覆盖；除应用根部通过 `ConfigProvider` 设置的项目级全局 Token 外，禁止使用 `.ant-*` 内部类选择器、依赖组件私有 DOM 结构、`!important` 或私有 CSS 变量重写组件样式。需要调整行为或外观时，优先使用公开 Props、插槽和 Design Token。
+- 项目自定义样式禁止主动增加阴影，包括 `box-shadow`、`text-shadow` 和 `filter: drop-shadow()`；层级使用实色背景、边框、间距和排版表达。Ant Design 组件自带的阴影与交互状态保持官方默认，不得仅为移除原生效果编写覆盖样式。
+- 禁止在项目自定义样式中使用视觉悬浮效果，不得通过位移、缩放、悬停抬升或悬浮卡片表达状态；页面布局使用 Flex、Grid 或正常文档流，不使用 CSS `float`。Modal、Drawer、Dropdown、Popover 和 Tooltip 等功能性浮层直接使用 Ant Design 默认样式，不额外添加阴影、模糊或抬升动效。
+- 禁止拟态玻璃效果，不使用 `backdrop-filter`、背景模糊、半透明玻璃面板、高光叠加或类似视觉处理。
+- 禁止渐变色，不使用 `linear-gradient()`、`radial-gradient()`、`conic-gradient()`、渐变遮罩或渐变文字；背景、边框、图表和状态颜色均使用单一设计令牌色值。
+- 禁止自定义圆角；矩形组件只能使用全局 `2px` 圆角 Token，不得在页面、组件、内联样式或局部 CSS 中另行硬编码其他圆角值；只有头像、状态点、圆形图标按钮等明确具有圆形语义的元素可使用 `50%`。
+- 所有业务图表统一使用 `@ant-design/charts`，并遵循项目实际安装版本的官方 API；禁止引入 ECharts、Chart.js、Recharts，禁止手写 Canvas、SVG 或使用静态图片模拟图表。仅展示单个统计值时使用 Ant Design `Statistic` 或 ProComponents `StatisticCard`，涉及趋势、分布、占比或关系的数据可视化仍须使用 Ant Design Charts。
 - 新建中后台布局、表格、列表、表单、详情或图表页面时，使用项目 `ant-design-skill` 中对应规范和模板起步；已有页面优先复用现有布局与视觉体系。
 - 页面标题只由业务页面层提供；Layout 负责导航和内容容器，不重复自动渲染标题或面包屑。
 - 表格和列表应设置稳定的列宽、溢出和空状态策略；操作区不得因中文文案换行、遮挡或被裁切。
