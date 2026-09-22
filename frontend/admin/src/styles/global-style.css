@@ -111,10 +111,13 @@ body,
      * ============================================================ */
     --font-zh: 'PingFang SC';                           /* 中文内容、列表的常规文本、表格列表项文本 */
     --font-en: 'SF UI Text';                            /* 英文内容 */
-    --font-number: 'Helvetica Neue', Arial, sans-serif; /* 金额/指标等需位数对齐比较的数字；表格业务编号不适用 */
+    --font-number: AlibabaSans, 'Helvetica Neue', Arial, sans-serif; /* 金额/指标等使用与全局一致的西文字体，并保留等宽数字特性 */
     --font-code: 'Consolas', 'Courier New', monospace;  /* 技术标识：commit、缺陷 ID、API 路径等；工号/订单号等业务编号不适用 */
     --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji';  /* emoji 字体 */
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', var(--font-zh), 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    --font-family:
+      AlibabaSans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+      'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     /* 字号（行高统一按 字号 + 8px 计算） */
     --font-size-xs: 12px;               /* 小号字体，行高 20px */

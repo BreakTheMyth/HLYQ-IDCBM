@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import { App as AntdApp, ConfigProvider } from 'antd'
 import { ProConfigProvider } from '@ant-design/pro-components'
 import { Navigate, Route, Routes } from 'react-router-dom'
@@ -9,7 +9,8 @@ import AppLoading from './components/AppLoading.tsx'
 import { adminPageRoutes } from './config/adminNavigation.tsx'
 import AdminLayout from './layouts/AdminLayout.tsx'
 import LoginPage from './pages/LoginPage.tsx'
-import { applyThemeMode, createAppTheme, getInitialThemeMode, type AppThemeMode } from './theme.ts'
+import { createAppTheme, type AppThemeMode } from './theme.ts'
+import { useThemeMode } from './hooks/useThemeMode.ts'
 
 const AdminRoutePage = lazy(() => import('./pages/AdminRoutePage.tsx'))
 
@@ -65,21 +66,17 @@ function AdminApplication({ themeMode, onThemeModeChange }: AdminApplicationProp
 }
 
 function App() {
-  const [themeMode, setThemeMode] = useState<AppThemeMode>(getInitialThemeMode)
+  const { themeMode, toggleThemeMode } = useThemeMode()
   const appTheme = useMemo(() => createAppTheme(themeMode), [themeMode])
-
-  useEffect(() => {
-    applyThemeMode(themeMode)
-  }, [themeMode])
 
   return (
     <ConfigProvider theme={appTheme} renderEmpty={() => <AppEmptyState />}>
-      <ProConfigProvider hashed={false}>
+      <ProConfigProvider hashed={false} dark={themeMode === 'dark'}>
         <AntdApp>
           <AuthProvider>
             <AdminApplication
               themeMode={themeMode}
-              onThemeModeChange={() => setThemeMode((currentMode) => (currentMode === 'light' ? 'dark' : 'light'))}
+              onThemeModeChange={toggleThemeMode}
             />
           </AuthProvider>
         </AntdApp>

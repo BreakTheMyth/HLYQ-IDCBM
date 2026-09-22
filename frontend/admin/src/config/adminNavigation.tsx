@@ -265,16 +265,16 @@ export function createProLayoutMenuData(): MenuDataItem[] {
     name: topMenu.label,
     icon: topMenu.icon,
     children: topMenu.sections.flatMap((section) => section.items.map((item) => ({
-      key: item.key,
-      path: item.path ?? item.children?.[0]?.path,
-      name: item.label,
-      icon: item.icon,
-      children: item.children?.map((child) => ({
-        key: child.key,
-        path: child.path,
-        name: child.label,
-      })),
-    }))),
+        key: item.key,
+        path: item.path ?? item.children?.[0]?.path,
+        name: item.label,
+        icon: item.icon,
+        children: item.children?.map((child) => ({
+          key: child.key,
+          path: child.path,
+          name: child.label,
+        })),
+      }))),
   }))
 }
 
